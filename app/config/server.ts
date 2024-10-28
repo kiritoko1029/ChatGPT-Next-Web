@@ -77,6 +77,8 @@ declare global {
 
       // custom template for preprocessing user input
       DEFAULT_INPUT_TEMPLATE?: string;
+      HITOKOTO_URL?: string;
+      SIDEBAR_TITLE?: string;
     }
   }
 }

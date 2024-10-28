@@ -1,4 +1,11 @@
-import React, { useEffect, useRef, useMemo, useState, Fragment } from "react";
+import React, {
+  useEffect,
+  useRef,
+  useMemo,
+  useState,
+  Fragment,
+  memo,
+} from "react";
 
 import styles from "./home.module.scss";
 
@@ -34,7 +41,6 @@ import { showConfirm, Selector } from "./ui-lib";
 const ChatList = dynamic(async () => (await import("./chat-list")).ChatList, {
   loading: () => null,
 });
-
 export function useHotKey() {
   const chatStore = useChatStore();
 
@@ -162,7 +168,7 @@ export function SideBarContainer(props: {
 
 export function SideBarHeader(props: {
   title?: string | React.ReactNode;
-  subTitle?: string | React.ReactNode;
+  subTitle?: string;
   logo?: React.ReactNode;
   children?: React.ReactNode;
   shouldNarrow?: boolean;
@@ -180,7 +186,9 @@ export function SideBarHeader(props: {
           <div className={styles["sidebar-title"]} data-tauri-drag-region>
             {title}
           </div>
-          <div className={styles["sidebar-sub-title"]}>{subTitle}</div>
+          <SubTitle
+            url={process.env.HITOKOTO_URL ?? "https://v1.hitokoto.cn/"}
+          />
         </div>
         <div className={styles["sidebar-logo"] + " no-dark"}>{logo}</div>
       </div>
@@ -188,6 +196,36 @@ export function SideBarHeader(props: {
     </Fragment>
   );
 }
+const SubTitle = memo(function SubTitle(props: { url: string }) {
+  const [hitokoto, setHitokoto] = useState("");
+  const [hitokoto_from, setHitokoto_from] = useState("");
+  const [from_who, setFrom_who] = useState("");
+  const refreshed = useRef(false);
+  function fetchHitokoto() {
+    refreshed.current = true;
+    fetch(props.url).then((res) => {
+      res.json().then((data) => {
+        setHitokoto(data.hitokoto);
+        setFrom_who(data.from_who);
+        setHitokoto_from(data.from);
+      });
+    });
+  }
+  if (!refreshed.current) {
+    fetchHitokoto();
+  }
+  return (
+    <div
+      className={styles["sidebar-sub-title"]}
+      style={{ cursor: "pointer" }}
+      onClick={fetchHitokoto}
+      title={"点击刷新"}
+    >
+      {hitokoto}
+      {hitokoto_from ? "——" + hitokoto_from : ""} {from_who}
+    </div>
+  );
+});
 
 export function SideBarBody(props: {
   children: React.ReactNode;
@@ -230,8 +268,8 @@ export function SideBar(props: { className?: string }) {
       {...props}
     >
       <SideBarHeader
-        title="NextChat"
-        subTitle="Build your own AI assistant."
+        title={process.env.SIDEBAR_TITLE ?? "Next Chat"}
+        subTitle="https://v1.hitokoto.cn"
         logo={<ChatGptIcon />}
         shouldNarrow={shouldNarrow}
       >
