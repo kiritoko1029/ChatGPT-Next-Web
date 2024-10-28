@@ -1,11 +1,4 @@
-import React, {
-  useEffect,
-  useRef,
-  useMemo,
-  useState,
-  Fragment,
-  memo,
-} from "react";
+import React, { useEffect, useRef, useMemo, useState, Fragment } from "react";
 
 import styles from "./home.module.scss";
 
@@ -21,7 +14,7 @@ import DiscoveryIcon from "../icons/discovery.svg";
 
 import Locale from "../locales";
 
-import { useAppConfig, useChatStore } from "../store";
+import { useAccessStore, useAppConfig, useChatStore } from "../store";
 
 import {
   DEFAULT_SIDEBAR_WIDTH,
@@ -186,9 +179,7 @@ export function SideBarHeader(props: {
           <div className={styles["sidebar-title"]} data-tauri-drag-region>
             {title}
           </div>
-          <SubTitle
-            url={process.env.HITOKOTO_URL ?? "https://v1.hitokoto.cn/"}
-          />
+          <SubTitle />
         </div>
         <div className={styles["sidebar-logo"] + " no-dark"}>{logo}</div>
       </div>
@@ -196,14 +187,15 @@ export function SideBarHeader(props: {
     </Fragment>
   );
 }
-const SubTitle = memo(function SubTitle(props: { url: string }) {
+const SubTitle = function SubTitle(props: {}) {
   const [hitokoto, setHitokoto] = useState("");
   const [hitokoto_from, setHitokoto_from] = useState("");
   const [from_who, setFrom_who] = useState("");
   const refreshed = useRef(false);
+  const { hitokotoUrl } = useAccessStore();
   function fetchHitokoto() {
     refreshed.current = true;
-    fetch(props.url).then((res) => {
+    fetch(hitokotoUrl).then((res) => {
       res.json().then((data) => {
         setHitokoto(data.hitokoto);
         setFrom_who(data.from_who);
@@ -211,9 +203,13 @@ const SubTitle = memo(function SubTitle(props: { url: string }) {
       });
     });
   }
-  if (!refreshed.current) {
-    fetchHitokoto();
-  }
+
+  useEffect(() => {
+    if (hitokotoUrl) {
+      fetchHitokoto();
+    }
+  }, [hitokotoUrl]);
+
   return (
     <div
       className={styles["sidebar-sub-title"]}
@@ -225,7 +221,7 @@ const SubTitle = memo(function SubTitle(props: { url: string }) {
       {hitokoto_from ? "——" + hitokoto_from : ""} {from_who}
     </div>
   );
-});
+};
 
 export function SideBarBody(props: {
   children: React.ReactNode;
@@ -260,7 +256,7 @@ export function SideBar(props: { className?: string }) {
   const navigate = useNavigate();
   const config = useAppConfig();
   const chatStore = useChatStore();
-
+  const { title } = useAccessStore();
   return (
     <SideBarContainer
       onDragStart={onDragStart}
@@ -268,8 +264,8 @@ export function SideBar(props: { className?: string }) {
       {...props}
     >
       <SideBarHeader
-        title={process.env.SIDEBAR_TITLE ?? "Next Chat"}
-        subTitle="https://v1.hitokoto.cn"
+        title={title}
+        subTitle=""
         logo={<ChatGptIcon />}
         shouldNarrow={shouldNarrow}
       >

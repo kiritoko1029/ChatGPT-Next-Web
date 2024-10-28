@@ -111,7 +111,12 @@ function getApiKey(keys?: string) {
 
   return apiKey;
 }
-
+export const getSidebarConfig = () => {
+  return {
+    title: process.env.SIDEBAR_TITLE ?? "Next Web",
+    hitokotoUrl: process.env.HITOKOTO_URL ?? "https://v1.hitokoto.cn",
+  };
+};
 export const getServerSideConfig = () => {
   if (typeof process === "undefined") {
     throw Error(
