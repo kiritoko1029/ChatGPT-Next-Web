@@ -118,6 +118,7 @@ const DEFAULT_ACCESS_STATE = {
   defaultModel: "",
   title: "",
   hitokotoUrl: "",
+  headerLogoUrl: "",
   // tts config
   edgeTTSVoiceName: "zh-CN-YunxiNeural",
 };
@@ -126,14 +127,6 @@ export const useAccessStore = createPersistStore(
   { ...DEFAULT_ACCESS_STATE },
 
   (set, get) => ({
-    setSideBarTitle() {
-      this.fetch();
-      return get().title;
-    },
-    setHitokotoUrl() {
-      this.fetch();
-      return get().hitokotoUrl;
-    },
     enabledAccessControl() {
       this.fetch();
 

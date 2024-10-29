@@ -162,11 +162,25 @@ export function SideBarContainer(props: {
 export function SideBarHeader(props: {
   title?: string | React.ReactNode;
   subTitle?: string;
-  logo?: React.ReactNode;
+  logo?: React.ReactNode | string;
   children?: React.ReactNode;
   shouldNarrow?: boolean;
 }) {
   const { title, subTitle, logo, children, shouldNarrow } = props;
+  let logoComp;
+  if (typeof logo === "string") {
+    logoComp = (
+      <img
+        className={styles["sidebar-logo"] + " no-dark"}
+        style={{ width: "45px" }}
+        src={logo}
+      ></img>
+    );
+  } else {
+    logoComp = (
+      <div className={styles["sidebar-logo"] + " no-dark"}>{logo}</div>
+    );
+  }
   return (
     <Fragment>
       <div
@@ -181,7 +195,7 @@ export function SideBarHeader(props: {
           </div>
           <SubTitle />
         </div>
-        <div className={styles["sidebar-logo"] + " no-dark"}>{logo}</div>
+        {logoComp}
       </div>
       {children}
     </Fragment>
@@ -256,7 +270,7 @@ export function SideBar(props: { className?: string }) {
   const navigate = useNavigate();
   const config = useAppConfig();
   const chatStore = useChatStore();
-  const { title } = useAccessStore();
+  const { title, headerLogoUrl } = useAccessStore();
   return (
     <SideBarContainer
       onDragStart={onDragStart}
@@ -266,7 +280,7 @@ export function SideBar(props: { className?: string }) {
       <SideBarHeader
         title={title}
         subTitle=""
-        logo={<ChatGptIcon />}
+        logo={headerLogoUrl ?? <ChatGptIcon />}
         shouldNarrow={shouldNarrow}
       >
         <div className={styles["sidebar-header-bar"]}>

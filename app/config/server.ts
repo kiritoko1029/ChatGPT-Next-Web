@@ -79,6 +79,7 @@ declare global {
       DEFAULT_INPUT_TEMPLATE?: string;
       HITOKOTO_URL?: string;
       SIDEBAR_TITLE?: string;
+      HEADER_LOGO_URL?: string;
     }
   }
 }
@@ -115,6 +116,7 @@ export const getSidebarConfig = () => {
   return {
     title: process.env.SIDEBAR_TITLE ?? "Next Web",
     hitokotoUrl: process.env.HITOKOTO_URL ?? "https://v1.hitokoto.cn",
+    headerLogoUrl: process.env.HEADER_LOGO_URL ?? "",
   };
 };
 export const getServerSideConfig = () => {

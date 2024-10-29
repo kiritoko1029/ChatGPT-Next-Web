@@ -5,7 +5,7 @@ import "./styles/highlight.scss";
 import { getClientConfig } from "./config/client";
 import type { Metadata, Viewport } from "next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import { getServerSideConfig } from "./config/server";
+import { getServerSideConfig, getSidebarConfig } from "./config/server";
 import { GoogleTagManager, GoogleAnalytics } from "@next/third-parties/google";
 const serverConfig = getServerSideConfig();
 
@@ -33,6 +33,10 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const { headerLogoUrl } = getSidebarConfig();
+  let favicon;
+  if (headerLogoUrl !== "") favicon = <link rel="icon" href={headerLogoUrl} />;
+  else favicon = <link rel="icon" href="/favicon.ico" />;
   return (
     <html lang="en">
       <head>
@@ -41,6 +45,7 @@ export default function RootLayout({
           name="viewport"
           content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
         />
+        {favicon}
         <link
           rel="manifest"
           href="/site.webmanifest"
