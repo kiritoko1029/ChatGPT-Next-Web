@@ -940,7 +940,21 @@ export function ShortcutKeyModal(props: { onClose: () => void }) {
 }
 
 export function AnnouncementModal(props: { onClose: () => void }) {
-  const { announcement } = useAccessStore();
+  const announcement = useRef("");
+  const fetchData = async () => {
+    const response = await fetch("/api/readFile", { method: "GET" });
+    const data = await response.json();
+    if (data.content) {
+      console.log(data.content);
+      announcement.current = data.content;
+    } else {
+      console.error("Failed to fetch file content");
+    }
+  };
+  // const { announcement } = useAccessStore();
+  useEffect(() => {
+    fetchData();
+  }, []);
   return (
     <div className="modal-mask">
       <Modal
@@ -959,7 +973,7 @@ export function AnnouncementModal(props: { onClose: () => void }) {
         ]}
       >
         <div>
-          <Markdown content={announcement}></Markdown>
+          <Markdown content={announcement.current}></Markdown>
         </div>
       </Modal>
     </div>

@@ -29,6 +29,7 @@
     "axios": "^1.7.5",
     "clsx": "^2.1.1",
     "emoji-picker-react": "^4.9.2",
+    "fs": "^0.0.1-security",
     "fuse.js": "^7.0.0",
     "heic2any": "^0.0.4",
     "html-to-image": "^1.11.11",
@@ -40,6 +41,7 @@
     "next": "^14.1.1",
     "node-fetch": "^3.3.1",
     "openapi-client-axios": "^7.5.5",
+    "path": "^0.12.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-markdown": "^8.0.7",
@@ -49,11 +51,11 @@
     "remark-breaks": "^3.0.2",
     "remark-gfm": "^3.0.1",
     "remark-math": "^5.1.1",
+    "rt-client": "https://github.com/Azure-Samples/aoai-realtime-audio-sdk/releases/download/js/v0.5.0/rt-client-0.5.0.tgz",
     "sass": "^1.59.2",
     "spark-md5": "^3.0.2",
     "use-debounce": "^9.0.4",
-    "zustand": "^4.3.8",
-    "rt-client": "https://github.com/Azure-Samples/aoai-realtime-audio-sdk/releases/download/js/v0.5.0/rt-client-0.5.0.tgz"
+    "zustand": "^4.3.8"
   },
   "devDependencies": {
     "@tauri-apps/api": "^1.6.0",

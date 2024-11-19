@@ -4,7 +4,6 @@ import { getServerSideConfig, getSidebarConfig } from "../../config/server";
 
 const serverConfig = getServerSideConfig();
 const sidebarConfig = getSidebarConfig();
-
 // Danger! Do not hard code any secret value here!
 // 警告！不要在这里写入任何敏感信息！
 const DANGER_CONFIG = {

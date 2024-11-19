@@ -85,6 +85,7 @@ declare global {
       SIDEBAR_TITLE?: string;
       HEADER_LOGO_URL?: string;
       ANNOUNCEMENT?: string;
+      ANNOUNCEMENT_PATH?: string;
     }
   }
 }

@@ -22,6 +22,9 @@ const nextConfig = {
 
     config.resolve.fallback = {
       child_process: false,
+      'fs/promises': false,
+      path: false,
+      fs: false,
     };
 
     return config;
@@ -99,7 +102,7 @@ if (mode !== "export") {
         destination: "https://dashscope.aliyuncs.com/api/:path*",
       },
     ];
-    
+
     return {
       beforeFiles: ret,
     };
