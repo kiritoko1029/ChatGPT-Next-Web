@@ -42,6 +42,9 @@ const en: LocaleType = {
         SubTitle: "Change the current topic",
       },
     },
+    Announcement: {
+      Title: "Announcement",
+    },
     Actions: {
       ChatList: "Go To Chat List",
       CompressedHistory: "Compressed History Memory Prompt",
@@ -59,6 +62,7 @@ const en: LocaleType = {
       RefreshToast: "Title refresh request sent",
       Speech: "Play",
       StopSpeech: "Stop",
+      ShowAnnouncement: "Show announcement",
     },
     Commands: {
       new: "Start a new chat",

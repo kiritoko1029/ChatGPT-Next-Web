@@ -20,6 +20,7 @@ export function IconButton(props: {
   autoFocus?: boolean;
   style?: CSSProperties;
   aria?: string;
+  dot?: boolean;
 }) {
   return (
     <button
@@ -61,6 +62,7 @@ export function IconButton(props: {
           {props.text}
         </div>
       )}
+      {props.dot && <span className={styles["notification-dot"]}></span>}
     </button>
   );
 }

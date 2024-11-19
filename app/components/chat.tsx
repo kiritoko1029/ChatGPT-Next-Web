@@ -23,6 +23,7 @@ import PromptIcon from "../icons/prompt.svg";
 import MaskIcon from "../icons/mask.svg";
 import MaxIcon from "../icons/max.svg";
 import MinIcon from "../icons/min.svg";
+import AnnounceIcon from "../icons/announcement.svg";
 import ResetIcon from "../icons/reload.svg";
 import BreakIcon from "../icons/break.svg";
 import SettingsIcon from "../icons/chat-settings.svg";
@@ -938,6 +939,33 @@ export function ShortcutKeyModal(props: { onClose: () => void }) {
   );
 }
 
+export function AnnouncementModal(props: { onClose: () => void }) {
+  const { announcement } = useAccessStore();
+  return (
+    <div className="modal-mask">
+      <Modal
+        title={Locale.Chat.Announcement.Title}
+        onClose={props.onClose}
+        actions={[
+          <IconButton
+            type="primary"
+            text={Locale.UI.Confirm}
+            icon={<ConfirmIcon />}
+            key="ok"
+            onClick={() => {
+              props.onClose();
+            }}
+          />,
+        ]}
+      >
+        <div>
+          <Markdown content={announcement}></Markdown>
+        </div>
+      </Modal>
+    </div>
+  );
+}
+
 function _Chat() {
   type RenderMessage = ChatMessage & { preview?: boolean };
 
@@ -1611,6 +1639,16 @@ function _Chat() {
 
   const [showChatSidePanel, setShowChatSidePanel] = useState(false);
 
+  const [showAnnouncementModal, setShowAnnouncementModal] = useState(false);
+  let hasNewAnnouncement = useRef(false);
+  // 通过识别远程和本地公告来在按钮右上角加圆点
+  let remoteAnnounce = useAccessStore().announcement;
+  let localAnnounce = useAppConfig().announcement;
+  const refreshAnnouncement = useAppConfig().refreshAnnouncement;
+  if (remoteAnnounce !== localAnnounce) {
+    hasNewAnnouncement.current = true;
+  }
+
   return (
     <>
       <div className={styles.chat} key={session.id}>
@@ -1692,6 +1730,20 @@ function _Chat() {
                 />
               </div>
             )}
+            <div className="window-action-button">
+              <IconButton
+                icon={<AnnounceIcon />}
+                bordered
+                dot={hasNewAnnouncement.current}
+                title={Locale.Chat.Actions.ShowAnnouncement}
+                aria={Locale.Chat.Actions.ShowAnnouncement}
+                onClick={() => {
+                  setShowAnnouncementModal(true);
+                  hasNewAnnouncement.current = false;
+                  refreshAnnouncement(remoteAnnounce);
+                }}
+              />
+            </div>
           </div>
 
           <PromptToast
@@ -2076,7 +2128,9 @@ function _Chat() {
           }}
         />
       )}
-
+      {showAnnouncementModal && (
+        <AnnouncementModal onClose={() => setShowAnnouncementModal(false)} />
+      )}
       {showShortcutKeyModal && (
         <ShortcutKeyModal onClose={() => setShowShortcutKeyModal(false)} />
       )}

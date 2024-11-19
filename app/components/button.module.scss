@@ -80,3 +80,12 @@
     margin-left: 5px;
   }
 }
+.notification-dot {
+  margin-bottom: 10px;
+  margin-left:1px;
+  width: 5px; /* 点的宽度 */
+  height: 5px; /* 点的高度 */
+  background-color: red; /* 红点颜色 */
+  border-radius: 50%; /* 圆形 */
+  display: block; /* 显示 */
+}

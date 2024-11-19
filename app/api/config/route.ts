@@ -18,6 +18,7 @@ const DANGER_CONFIG = {
   title: sidebarConfig.title,
   hitokotoUrl: sidebarConfig.hitokotoUrl,
   headerLogoUrl: sidebarConfig.headerLogoUrl,
+  announcement: sidebarConfig.announcement,
 };
 
 declare global {

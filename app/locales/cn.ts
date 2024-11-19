@@ -41,6 +41,9 @@ const cn = {
         SubTitle: "更改当前聊天主题",
       },
     },
+    Announcement: {
+      Title: "公告",
+    },
     Actions: {
       ChatList: "查看消息列表",
       CompressedHistory: "查看压缩后的历史 Prompt",
@@ -58,6 +61,7 @@ const cn = {
       RefreshToast: "已发送刷新标题请求",
       Speech: "朗读",
       StopSpeech: "停止",
+      ShowAnnouncement: "查看公告",
     },
     Commands: {
       new: "新建聊天",

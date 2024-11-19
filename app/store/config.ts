@@ -40,7 +40,7 @@ const config = getClientConfig();
 
 export const DEFAULT_CONFIG = {
   lastUpdate: Date.now(), // timestamp, to merge state
-
+  announcement: "",
   submitKey: SubmitKey.Enter,
   avatar: "1f603",
   fontSize: 14,
@@ -167,7 +167,11 @@ export const useAppConfig = createPersistStore(
     reset() {
       set(() => ({ ...DEFAULT_CONFIG }));
     },
-
+    refreshAnnouncement(ann: string) {
+      set(() => ({
+        announcement: ann,
+      }));
+    },
     mergeModels(newModels: LLMModel[]) {
       if (!newModels || newModels.length === 0) {
         return;

@@ -127,6 +127,7 @@ const DEFAULT_ACCESS_STATE = {
   title: "",
   hitokotoUrl: "",
   headerLogoUrl: "",
+  announcement: "",
   // tts config
   edgeTTSVoiceName: "zh-CN-YunxiNeural",
 };
