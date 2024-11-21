@@ -1,6 +1,6 @@
 import fs from "fs/promises";
 import { NextResponse } from "next/server";
-export default async function handler(req: any, res: any) {
+async function handler(req: any, res: any) {
   // 定义文件路径
   if (process.env.ANNOUNCEMENT_PATH) {
     const filePath = process.env.ANNOUNCEMENT_PATH;
@@ -11,5 +11,3 @@ export default async function handler(req: any, res: any) {
 }
 export const GET = handler;
 export const POST = handler;
-
-export const runtime = "edge";
