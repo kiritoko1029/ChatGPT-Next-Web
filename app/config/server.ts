@@ -84,7 +84,6 @@ declare global {
       HITOKOTO_URL?: string;
       SIDEBAR_TITLE?: string;
       HEADER_LOGO_URL?: string;
-      ANNOUNCEMENT?: string;
       ANNOUNCEMENT_PATH?: string;
     }
   }
@@ -123,7 +122,6 @@ export const getSidebarConfig = () => {
     title: process.env.SIDEBAR_TITLE ?? "Next Web",
     hitokotoUrl: process.env.HITOKOTO_URL ?? "https://v1.hitokoto.cn",
     headerLogoUrl: process.env.HEADER_LOGO_URL ?? "",
-    announcement: process.env.ANNOUNCEMENT ?? "",
   };
 };
 export const getServerSideConfig = () => {

@@ -40,7 +40,7 @@ const config = getClientConfig();
 
 export const DEFAULT_CONFIG = {
   lastUpdate: Date.now(), // timestamp, to merge state
-  announcement: "",
+  announcementHash: "",
   submitKey: SubmitKey.Enter,
   avatar: "1f603",
   fontSize: 14,
@@ -62,7 +62,6 @@ export const DEFAULT_CONFIG = {
 
   customModels: "",
   models: DEFAULT_MODELS as any as LLMModel[],
-
   modelConfig: {
     model: "gpt-4o-mini" as ModelType,
     providerName: "OpenAI" as ServiceProvider,
@@ -167,9 +166,9 @@ export const useAppConfig = createPersistStore(
     reset() {
       set(() => ({ ...DEFAULT_CONFIG }));
     },
-    refreshAnnouncement(ann: string) {
+    refreshAnnouncementHash(hash: string) {
       set(() => ({
-        announcement: ann,
+        announcementHash: hash,
       }));
     },
     mergeModels(newModels: LLMModel[]) {

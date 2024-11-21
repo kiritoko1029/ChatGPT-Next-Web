@@ -939,22 +939,10 @@ export function ShortcutKeyModal(props: { onClose: () => void }) {
   );
 }
 
-export function AnnouncementModal(props: { onClose: () => void }) {
-  const announcement = useRef("");
-  const fetchData = async () => {
-    const response = await fetch("/api/readFile", { method: "GET" });
-    const data = await response.json();
-    if (data.content) {
-      console.log(data.content);
-      announcement.current = data.content;
-    } else {
-      console.error("Failed to fetch file content");
-    }
-  };
-  // const { announcement } = useAccessStore();
-  useEffect(() => {
-    fetchData();
-  }, []);
+export function AnnouncementModal(props: {
+  announcement: string;
+  onClose: () => void;
+}) {
   return (
     <div className="modal-mask">
       <Modal
@@ -973,7 +961,7 @@ export function AnnouncementModal(props: { onClose: () => void }) {
         ]}
       >
         <div>
-          <Markdown content={announcement.current}></Markdown>
+          <Markdown content={props.announcement}></Markdown>
         </div>
       </Modal>
     </div>
@@ -1655,13 +1643,28 @@ function _Chat() {
 
   const [showAnnouncementModal, setShowAnnouncementModal] = useState(false);
   let hasNewAnnouncement = useRef(false);
+  const announcement = useRef("");
+  const announcementHash = useRef("");
+  const localAnnounceHash = useAppConfig().announcementHash;
+  const refreshAnnouncementHash = useAppConfig().refreshAnnouncementHash;
   // 通过识别远程和本地公告来在按钮右上角加圆点
-  let remoteAnnounce = useAccessStore().announcement;
-  let localAnnounce = useAppConfig().announcement;
-  const refreshAnnouncement = useAppConfig().refreshAnnouncement;
-  if (remoteAnnounce !== localAnnounce) {
-    hasNewAnnouncement.current = true;
-  }
+  const fetchData = async () => {
+    const response = await fetch("/api/readFile", { method: "GET" });
+    const data = await response.json();
+    if (data.content) {
+      announcement.current = data.content;
+      announcementHash.current = data.hash;
+      if (data.hash !== localAnnounceHash) {
+        hasNewAnnouncement.current = true;
+        refreshAnnouncementHash(announcementHash.current);
+      }
+    } else {
+      console.error("Failed to fetch file content");
+    }
+  };
+  useEffect(() => {
+    fetchData();
+  });
 
   return (
     <>
@@ -1754,7 +1757,6 @@ function _Chat() {
                 onClick={() => {
                   setShowAnnouncementModal(true);
                   hasNewAnnouncement.current = false;
-                  refreshAnnouncement(remoteAnnounce);
                 }}
               />
             </div>
@@ -2143,7 +2145,10 @@ function _Chat() {
         />
       )}
       {showAnnouncementModal && (
-        <AnnouncementModal onClose={() => setShowAnnouncementModal(false)} />
+        <AnnouncementModal
+          announcement={announcement.current}
+          onClose={() => setShowAnnouncementModal(false)}
+        />
       )}
       {showShortcutKeyModal && (
         <ShortcutKeyModal onClose={() => setShowShortcutKeyModal(false)} />
