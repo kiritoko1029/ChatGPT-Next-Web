@@ -281,7 +281,7 @@ export function SideBar(props: { className?: string }) {
       <SideBarHeader
         title={title}
         subTitle=""
-        logo={headerLogoUrl ?? <ChatGptIcon />}
+        logo={headerLogoUrl !== "" ? headerLogoUrl : <ChatGptIcon />}
         shouldNarrow={shouldNarrow}
       >
         <div className={styles["sidebar-header-bar"]}>
