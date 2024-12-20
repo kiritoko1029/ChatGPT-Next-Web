@@ -1664,8 +1664,7 @@ function _Chat() {
   };
   useEffect(() => {
     fetchData();
-  });
-
+  }, []);
   return (
     <>
       <div className={styles.chat} key={session.id}>
