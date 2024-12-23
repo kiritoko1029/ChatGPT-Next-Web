@@ -595,6 +595,15 @@ const no: PartialLocaleType = {
     Topic: "Emne",
     Time: "Tid",
   },
+  Hitokoto: {
+    // 挪威语
+    OnlineCount: (count: number) => `${count} personer online`,
+    CopySuccess: "Kopiert til utklippstavlen",
+    Actions: {
+      Refresh: "Neste",
+      Copy: "Kopier",
+    },
+  },
 };
 
 export default no;

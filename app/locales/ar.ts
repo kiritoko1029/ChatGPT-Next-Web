@@ -575,6 +575,15 @@ const ar: PartialLocaleType = {
     Topic: "الموضوع",
     Time: "الوقت",
   },
+  Hitokoto: {
+    // 阿拉伯语
+    OnlineCount: (count: number) => `${count} في الخط`,
+    CopySuccess: "تم نسخه إلى الحافظة",
+    Actions: {
+      Refresh: "التالي",
+      Copy: "نسخ",
+    },
+  },
 };
 
 export default ar;

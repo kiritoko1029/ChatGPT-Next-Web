@@ -602,6 +602,15 @@ const fr: PartialLocaleType = {
     Topic: "Sujet",
     Time: "Temps",
   },
+  Hitokoto: {
+    // 法语
+    OnlineCount: (count: number) => `${count} personnes en ligne`,
+    CopySuccess: "Copié dans le presse-papiers",
+    Actions: {
+      Refresh: "Suivant",
+      Copy: "Copier",
+    },
+  },
 };
 
 export default fr;

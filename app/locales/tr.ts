@@ -591,6 +591,15 @@ const tr: PartialLocaleType = {
     Topic: "Konu",
     Time: "Zaman",
   },
+  Hitokoto: {
+    // 土耳其语
+    OnlineCount: (count: number) => `${count} kişi online`,
+    CopySuccess: "Kopyalanıyor",
+    Actions: {
+      Refresh: "Sonraki",
+      Copy: "Kopyala",
+    },
+  },
 };
 
 export default tr;

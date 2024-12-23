@@ -532,6 +532,15 @@ const tw = {
     Topic: "主題",
     Time: "時間",
   },
+  Hitokoto: {
+    // 繁体中文
+    OnlineCount: (count: number) => `${count} 人在线`,
+    CopySuccess: "已复制到剪贴板",
+    Actions: {
+      Refresh: "下一条",
+      Copy: "复制",
+    },
+  },
 };
 
 type DeepPartial<T> = T extends object

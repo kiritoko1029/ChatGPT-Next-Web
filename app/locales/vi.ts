@@ -586,6 +586,15 @@ const vi: PartialLocaleType = {
     Topic: "Chủ đề",
     Time: "Thời gian",
   },
+  Hitokoto: {
+    // 越南语
+    OnlineCount: (count: number) => `${count} người online`,
+    CopySuccess: "Đã sao chép vào clipboard",
+    Actions: {
+      Refresh: "Tiếp theo",
+      Copy: "Sao chép",
+    },
+  },
 };
 
 export default vi;

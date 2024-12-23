@@ -585,6 +585,15 @@ const jp: PartialLocaleType = {
     Topic: "テーマ",
     Time: "時間",
   },
+  Hitokoto: {
+    // 日语
+    OnlineCount: (count: number) => `${count} 人オンライン`,
+    CopySuccess: "クリップボードにコピーされました",
+    Actions: {
+      Refresh: "次の",
+      Copy: "コピー",
+    },
+  },
 };
 
 export default jp;

@@ -11,7 +11,8 @@ import DeleteIcon from "../icons/delete.svg";
 import MaskIcon from "../icons/mask.svg";
 import DragIcon from "../icons/drag.svg";
 import DiscoveryIcon from "../icons/discovery.svg";
-
+import CopyIcon2 from "../icons/copy2.svg";
+import ReloadIcon2 from "../icons/reload2.svg";
 import Locale from "../locales";
 
 import { useAccessStore, useAppConfig, useChatStore } from "../store";
@@ -202,12 +203,146 @@ export function SideBarHeader(props: {
     </Fragment>
   );
 }
+
+// Hitokoto Tooltip Component
+const HitokotoTooltip = ({
+  showCopied,
+  onRefresh,
+  onCopy,
+  children,
+}: {
+  showCopied: boolean;
+  onRefresh: () => void;
+  onCopy: (e: React.MouseEvent) => void;
+  children: React.ReactNode;
+}) => {
+  const [isHovering, setIsHovering] = useState(false);
+
+  const tooltipStyle = {
+    position: "absolute",
+    top: "-32px",
+    left: "50%",
+    transform: "translateX(-50%)",
+    backgroundColor: "rgba(0,0,0,0.8)",
+    color: "white",
+    padding: "4px 8px",
+    borderRadius: "4px",
+    fontSize: "12px",
+    display: "flex",
+    gap: "8px",
+    whiteSpace: "nowrap",
+    zIndex: 1000,
+    transition: "all 0.3s",
+  } as const;
+
+  return (
+    <div
+      style={{
+        fontSize: "13px",
+        position: "relative",
+        cursor: "pointer",
+        padding: "4px",
+        borderRadius: "4px",
+        transition: "all 0.3s",
+        backgroundColor: isHovering ? "rgba(0,0,0,0.05)" : "transparent",
+      }}
+      className="hitokoto-container"
+      onMouseEnter={() => setIsHovering(true)}
+      onMouseLeave={(e) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        const isInTooltipArea = e.clientY < rect.top - 40;
+        if (!isInTooltipArea) {
+          setIsHovering(false);
+        }
+      }}
+    >
+      <div onClick={onRefresh} style={{ marginBottom: "2px" }}>
+        {children}
+      </div>
+      <div
+        style={{
+          ...tooltipStyle,
+          opacity: showCopied ? 1 : 0,
+          visibility: showCopied ? "visible" : "hidden",
+          pointerEvents: "none",
+        }}
+      >
+        {Locale.Hitokoto.CopySuccess}
+      </div>
+      <div
+        className="action-tooltip"
+        style={{
+          ...tooltipStyle,
+          opacity: isHovering && !showCopied ? 1 : 0,
+          visibility: isHovering && !showCopied ? "visible" : "hidden",
+          pointerEvents: isHovering && !showCopied ? "auto" : "none",
+        }}
+        onMouseEnter={() => setIsHovering(true)}
+        onMouseLeave={() => setIsHovering(false)}
+      >
+        <span
+          onClick={(e) => {
+            e.stopPropagation();
+            onRefresh();
+          }}
+          style={{
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            gap: "4px",
+          }}
+        >
+          <ReloadIcon2 style={{ width: "14px", height: "14px" }} />{" "}
+          {Locale.Hitokoto.Actions.Refresh}
+        </span>
+        <span style={{ color: "#666" }}>|</span>
+        <span
+          onClick={(e) => {
+            e.stopPropagation();
+            onCopy(e);
+          }}
+          style={{
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            gap: "4px",
+          }}
+        >
+          <CopyIcon2 style={{ width: "14px", height: "14px" }} />{" "}
+          {Locale.Hitokoto.Actions.Copy}
+        </span>
+      </div>
+      <style jsx>{`
+        .action-tooltip {
+          pointer-events: none;
+        }
+        .action-tooltip span {
+          pointer-events: auto;
+        }
+      `}</style>
+    </div>
+  );
+};
+
 const SubTitle = function SubTitle(props: {}) {
   const [hitokoto, setHitokoto] = useState("");
   const [hitokoto_from, setHitokoto_from] = useState("");
   const [from_who, setFrom_who] = useState("");
+  const [onlineUsers, setOnlineUsers] = useState(0);
+  const [showCopied, setShowCopied] = useState(false);
   const refreshed = useRef(false);
   const { hitokotoUrl } = useAccessStore();
+
+  const copyHitokoto = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const text = `${hitokoto}${hitokoto_from ? ` —— ${hitokoto_from}` : ""}${
+      from_who ? ` ${from_who}` : ""
+    }`;
+    await navigator.clipboard.writeText(text);
+    setShowCopied(true);
+    setTimeout(() => setShowCopied(false), 1000);
+  };
+
   function fetchHitokoto() {
     refreshed.current = true;
     fetch(hitokotoUrl).then((res) => {
@@ -220,20 +355,74 @@ const SubTitle = function SubTitle(props: {}) {
   }
 
   useEffect(() => {
+    const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+    const ws = new WebSocket(`${protocol}//${window.location.host}/ws`);
+
+    ws.onopen = () => {
+      console.log("WebSocket connected");
+      ws.send(JSON.stringify({ type: "getOnline" }));
+    };
+
+    ws.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        console.log("Received message:", data);
+        if (data.type === "online") {
+          setOnlineUsers(data.count);
+        }
+      } catch (e) {
+        console.error("Failed to parse message:", e);
+      }
+    };
+
+    ws.onerror = (error) => {
+      console.error("WebSocket error:", error);
+    };
+
+    return () => {
+      ws.close();
+    };
+  }, []);
+
+  useEffect(() => {
     if (hitokotoUrl) {
       fetchHitokoto();
     }
   }, [hitokotoUrl]);
 
   return (
-    <div
-      className={styles["sidebar-sub-title"]}
-      style={{ cursor: "pointer" }}
-      onClick={fetchHitokoto}
-      title={"点击刷新"}
-    >
-      {hitokoto}
-      {hitokoto_from ? "——" + hitokoto_from : ""} {from_who}
+    <div className={styles["sidebar-sub-title"]}>
+      <div
+        style={{
+          fontSize: "12px",
+          color: "#888",
+          display: "flex",
+          alignItems: "center",
+          gap: "4px",
+          marginBottom: "4px",
+        }}
+      >
+        <div
+          style={{
+            width: "6px",
+            height: "6px",
+            borderRadius: "50%",
+            backgroundColor: onlineUsers > 0 ? "#4CAF50" : "#ccc",
+            marginRight: "2px",
+          }}
+        />
+        {Locale.Hitokoto.OnlineCount(onlineUsers)}
+      </div>
+      <HitokotoTooltip
+        showCopied={showCopied}
+        onRefresh={fetchHitokoto}
+        onCopy={copyHitokoto}
+      >
+        {hitokoto}
+        <span style={{ color: "#888" }}>
+          {hitokoto_from ? ` —— ${hitokoto_from}` : ""} {from_who}
+        </span>
+      </HitokotoTooltip>
     </div>
   );
 };

@@ -586,6 +586,15 @@ const cs: PartialLocaleType = {
     Topic: "Téma",
     Time: "Čas",
   },
+  Hitokoto: {
+    // 捷克语
+    OnlineCount: (count: number) => `${count} osob online`,
+    CopySuccess: "Byl zkopírován do schránky",
+    Actions: {
+      Refresh: "Následující",
+      Copy: "Kopírovat",
+    },
+  },
 };
 
 export default cs;

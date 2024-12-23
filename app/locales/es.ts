@@ -601,6 +601,15 @@ const es: PartialLocaleType = {
     Topic: "Tema",
     Time: "Hora",
   },
+  Hitokoto: {
+    // 西班牙语
+    OnlineCount: (count: number) => `${count} personas en línea`,
+    CopySuccess: "Copiado al portapapeles",
+    Actions: {
+      Refresh: "Siguiente",
+      Copy: "Copiar",
+    },
+  },
 };
 
 export default es;

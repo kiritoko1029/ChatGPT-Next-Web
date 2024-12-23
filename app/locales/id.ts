@@ -590,6 +590,15 @@ const id: PartialLocaleType = {
     Topic: "Topik",
     Time: "Waktu",
   },
+  Hitokoto: {
+    // 印度尼西亚语
+    OnlineCount: (count: number) => `${count} orang online`,
+    CopySuccess: "Disalin ke clipboard",
+    Actions: {
+      Refresh: "Berikutnya",
+      Copy: "Salin",
+    },
+  },
 };
 
 export default id;

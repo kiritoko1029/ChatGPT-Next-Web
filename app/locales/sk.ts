@@ -538,6 +538,15 @@ const sk: PartialLocaleType = {
     Code: "Zistený prístupový kód z URL, potvrdiť na aplikovanie?",
     Settings: "Zistené nastavenia z URL, potvrdiť na aplikovanie?",
   },
+  Hitokoto: {
+    // 斯洛伐克语
+    OnlineCount: (count: number) => `${count} osob online`,
+    CopySuccess: "Zkopírováno do schránky",
+    Actions: {
+      Refresh: "Následující",
+      Copy: "Kopírovat",
+    },
+  },
 };
 
 export default sk;

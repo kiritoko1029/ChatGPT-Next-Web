@@ -605,6 +605,15 @@ const de: PartialLocaleType = {
     Topic: "Thema",
     Time: "Zeit",
   },
+  Hitokoto: {
+    // 德语
+    OnlineCount: (count: number) => `${count} Menschen online`,
+    CopySuccess: "Wurde in die Zwischenablage kopiert",
+    Actions: {
+      Refresh: "Nächste",
+      Copy: "Kopieren",
+    },
+  },
 };
 
 export default de;

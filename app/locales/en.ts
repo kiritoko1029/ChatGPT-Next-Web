@@ -837,6 +837,15 @@ const en: LocaleType = {
     GenerateParams: "Generate Params",
     Detail: "Detail",
   },
+  Hitokoto: {
+    // 英语
+    OnlineCount: (count: number) => `${count} people online`,
+    CopySuccess: "Copied to clipboard",
+    Actions: {
+      Refresh: "Next",
+      Copy: "Copy",
+    },
+  },
 };
 
 export default en;

@@ -585,6 +585,15 @@ const bn: PartialLocaleType = {
     Topic: "থিম",
     Time: "সময়",
   },
+  Hitokoto: {
+    // 孟加拉语
+    OnlineCount: (count: number) => `${count} মানুষ অনলাইন`,
+    CopySuccess: "ক্লিপবোর্ডে লেখা হয়েছে",
+    Actions: {
+      Refresh: "পরবর্তী",
+      Copy: "কপি",
+    },
+  },
 };
 
 export default bn;

@@ -523,6 +523,15 @@ const pt: PartialLocaleType = {
     Settings:
       "Configurações detectadas a partir da url, confirmar para aplicar?",
   },
+  Hitokoto: {
+    // 葡萄牙语
+    OnlineCount: (count: number) => `${count} pessoas online`,
+    CopySuccess: "Copiado para a área de transferência",
+    Actions: {
+      Refresh: "Próximo",
+      Copy: "Copiar",
+    },
+  },
 };
 
 export default pt;

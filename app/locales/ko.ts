@@ -576,6 +576,15 @@ const ko: PartialLocaleType = {
     Topic: "주제",
     Time: "시간",
   },
+  Hitokoto: {
+    // 韩语
+    OnlineCount: (count: number) => `${count} 명 온라인`,
+    CopySuccess: "클립보드에 복사되었습니다",
+    Actions: {
+      Refresh: "다음",
+      Copy: "복사",
+    },
+  },
 };
 
 export default ko;

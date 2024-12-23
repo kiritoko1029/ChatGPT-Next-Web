@@ -827,6 +827,14 @@ const cn = {
     GenerateParams: "生成参数",
     Detail: "详情",
   },
+  Hitokoto: {
+    OnlineCount: (count: number) => `${count} 人在线`,
+    CopySuccess: "已复制到剪贴板",
+    Actions: {
+      Refresh: "下一条",
+      Copy: "复制",
+    },
+  },
 };
 
 type DeepPartial<T> = T extends object

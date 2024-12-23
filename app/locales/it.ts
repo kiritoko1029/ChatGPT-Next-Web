@@ -603,6 +603,15 @@ const it: PartialLocaleType = {
     Topic: "Tema",
     Time: "Tempo",
   },
+  Hitokoto: {
+    // 意大利语
+    OnlineCount: (count: number) => `${count} persone online`,
+    CopySuccess: "Copiato nel portapapele",
+    Actions: {
+      Refresh: "Successivo",
+      Copy: "Copia",
+    },
+  },
 };
 
 export default it;

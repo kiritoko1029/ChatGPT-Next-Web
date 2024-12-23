@@ -593,6 +593,15 @@ const ru: PartialLocaleType = {
     Topic: "Тема",
     Time: "Время",
   },
+  Hitokoto: {
+    // 俄语
+    OnlineCount: (count: number) => `${count} человек онлайн`,
+    CopySuccess: "Скопировано в буфер обмена",
+    Actions: {
+      Refresh: "Следующий",
+      Copy: "Копировать",
+    },
+  },
 };
 
 export default ru;
