@@ -71,6 +71,17 @@ export function useWebSocket() {
           }
         }
       };
+
+      ws.onmessage = (event) => {
+        try {
+          const data = JSON.parse(event.data);
+          if (data.type === "online") {
+            setOnlineUsers(data.count);
+          }
+        } catch (error) {
+          console.error("Failed to parse WebSocket message:", error);
+        }
+      };
     } catch (error) {
       console.error("Failed to setup WebSocket:", error);
     }

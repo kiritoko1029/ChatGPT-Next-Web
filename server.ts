@@ -5,7 +5,7 @@ import { setupWebSocket } from './app/api/websocket';
 
 const dev = process.env.NODE_ENV !== 'production';
 const hostname = 'localhost';
-const port = 3000;
+const port = 13001;
 
 const app = next({ dev, hostname, port });
 const handle = app.getRequestHandler();
@@ -23,6 +23,16 @@ app.prepare().then(() => {
   });
 
   setupWebSocket(server);
+
+  server.on("error", (error) => {
+    console.error("Server error:", error);
+  });
+
+  server.on("close", () => {
+    if (wss) {
+      wss.close();
+    }
+  });
 
   server.listen(port, () => {
     console.log(`> Ready on http://${hostname}:${port}`);

@@ -9,8 +9,12 @@ function broadcastOnlineUsers() {
   if (!wss) return;
   const message = JSON.stringify({ type: "online", count: onlineUsers });
   wss.clients.forEach((client) => {
-    if (client.readyState === WebSocket.OPEN) {
-      client.send(message);
+    try {
+      if (client.readyState === WebSocket.OPEN) {
+        client.send(message);
+      }
+    } catch (error) {
+      console.error("Error broadcasting to client:", error);
     }
   });
 }
@@ -65,13 +69,16 @@ export function setupWebSocket(server: Server) {
     });
 
     ws.on("close", () => {
-      onlineUsers--;
+      onlineUsers = Math.max(0, onlineUsers - 1);
       console.log("Connection closed. Online users:", onlineUsers);
       broadcastOnlineUsers();
     });
 
     ws.on("error", (error) => {
       console.error("WebSocket error:", error);
+      if (ws.readyState === WebSocket.OPEN) {
+        ws.close();
+      }
     });
   });
 
