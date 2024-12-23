@@ -46,3 +46,4 @@ dev
 *.key.pub
 
 masks.json
+/websocket-server/node_modules

@@ -21,10 +21,13 @@ export function useWebSocket() {
   const setupWebSocket = useCallback(() => {
     try {
       const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-      const host = window.location.host;
-      console.log(`Attempting WebSocket connection to ${protocol}//${host}/ws`);
+      const wsHost =
+        process.env.NEXT_PUBLIC_WS_HOST || window.location.hostname;
+      const wsPort = process.env.NEXT_PUBLIC_WS_PORT || "13001";
+      const wsUrl = `${protocol}//${wsHost}:${wsPort}/ws`;
 
-      const ws = new WebSocket(`${protocol}//${host}/ws`);
+      console.log("Attempting to connect to:", wsUrl);
+      const ws = new WebSocket(wsUrl);
       wsRef.current = ws;
 
       ws.onopen = () => {

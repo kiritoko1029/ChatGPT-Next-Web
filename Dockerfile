@@ -57,8 +57,7 @@ CMD if [ -n "$PROXY_URL" ]; then \
     echo "localnet ::1/128" >> $conf; \
     echo "[ProxyList]" >> $conf; \
     echo "$protocol $host $port" >> $conf; \
-    cat /etc/proxychains.conf; \
-    proxychains -f $conf node server.js; \
+    node proxychains -f $conf node server.js; \
     else \
-    node server.js; \
+    node node server.js; \
     fi
