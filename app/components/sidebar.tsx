@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useMemo, useState, Fragment } from "react";
-
+import { useWebSocket } from "../hooks/useWebSocket";
 import styles from "./home.module.scss";
 
 import { IconButton } from "./button";
@@ -328,10 +328,10 @@ const SubTitle = function SubTitle(props: {}) {
   const [hitokoto, setHitokoto] = useState("");
   const [hitokoto_from, setHitokoto_from] = useState("");
   const [from_who, setFrom_who] = useState("");
-  const [onlineUsers, setOnlineUsers] = useState(0);
   const [showCopied, setShowCopied] = useState(false);
   const refreshed = useRef(false);
   const { hitokotoUrl } = useAccessStore();
+  const onlineUsers = useWebSocket();
 
   const copyHitokoto = async (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -353,36 +353,6 @@ const SubTitle = function SubTitle(props: {}) {
       });
     });
   }
-
-  useEffect(() => {
-    const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-    const ws = new WebSocket(`${protocol}//${window.location.host}/ws`);
-
-    ws.onopen = () => {
-      console.log("WebSocket connected");
-      ws.send(JSON.stringify({ type: "getOnline" }));
-    };
-
-    ws.onmessage = (event) => {
-      try {
-        const data = JSON.parse(event.data);
-        console.log("Received message:", data);
-        if (data.type === "online") {
-          setOnlineUsers(data.count);
-        }
-      } catch (e) {
-        console.error("Failed to parse message:", e);
-      }
-    };
-
-    ws.onerror = (error) => {
-      console.error("WebSocket error:", error);
-    };
-
-    return () => {
-      ws.close();
-    };
-  }, []);
 
   useEffect(() => {
     if (hitokotoUrl) {
