@@ -22,46 +22,45 @@ export function useWebSocket() {
     try {
       const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
       const host = window.location.host;
-      console.log(`Connecting to WebSocket at ${protocol}//${host}/ws`);
+      console.log(`Attempting WebSocket connection to ${protocol}//${host}/ws`);
 
       const ws = new WebSocket(`${protocol}//${host}/ws`);
       wsRef.current = ws;
 
       ws.onopen = () => {
-        console.log("WebSocket connected successfully");
+        console.log("WebSocket connection established successfully");
         reconnectAttemptsRef.current = 0;
         ws.send(JSON.stringify({ type: "getOnline" }));
       };
 
-      ws.onmessage = (event) => {
-        try {
-          const data = JSON.parse(event.data);
-          if (data.type === "online") {
-            setOnlineUsers(data.count);
-          }
-        } catch (e) {
-          console.error("Failed to parse message:", e);
+      ws.onerror = (error) => {
+        console.error("WebSocket error:", error);
+        if (error instanceof Event) {
+          console.error("Error event:", {
+            type: error.type,
+            target: error.target,
+            timeStamp: error.timeStamp,
+          });
         }
       };
 
-      ws.onerror = (error) => {
-        console.error("WebSocket error:", error);
-      };
-
       ws.onclose = (event) => {
-        // 只有在非正常关闭时才重连
+        console.log("WebSocket closed with code:", event.code);
+        console.log("Close reason:", event.reason);
+
         if (event.code !== 1000 && event.code !== 1001) {
-          console.log(
-            "WebSocket closed unexpectedly, attempting to reconnect...",
-          );
+          console.log("Attempting to reconnect...");
           reconnectAttemptsRef.current += 1;
 
-          // 如果重连次数未超过限制，则尝试重连
           if (reconnectAttemptsRef.current <= MAX_RECONNECT_ATTEMPTS) {
             const delay = Math.min(
               1000 * Math.pow(2, reconnectAttemptsRef.current),
               10000,
             );
+            console.log(
+              `Reconnecting in ${delay}ms (attempt ${reconnectAttemptsRef.current}/${MAX_RECONNECT_ATTEMPTS})`,
+            );
+
             reconnectTimeoutRef.current = setTimeout(() => {
               if (document.visibilityState === "visible") {
                 setupWebSocket();

@@ -17,13 +17,15 @@ services:
       - ENABLE_BALANCE_QUERY=$ENABLE_BALANCE_QUERY
       - DISABLE_FAST_LINK=$DISABLE_FAST_LINK
       - OPENAI_SB=$OPENAI_SB
+      - HOSTNAME=0.0.0.0
+      - PORT=3000
 
   chatgpt-next-web-proxy:
     profiles: [ "proxy" ]
     container_name: chatgpt-next-web-proxy
     image: yidadaa/chatgpt-next-web
     ports:
-      - 3000:3000
+      - "3000:3000"
     environment:
       - OPENAI_API_KEY=$OPENAI_API_KEY
       - GOOGLE_API_KEY=$GOOGLE_API_KEY
@@ -36,3 +38,5 @@ services:
       - ENABLE_BALANCE_QUERY=$ENABLE_BALANCE_QUERY
       - DISABLE_FAST_LINK=$DISABLE_FAST_LINK
       - OPENAI_SB=$OPENAI_SB
+      - HOSTNAME=0.0.0.0
+      - PORT=3000
