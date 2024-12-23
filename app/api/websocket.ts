@@ -35,7 +35,13 @@ export const config = {
 export function setupWebSocket(server: Server) {
   if (wss) return;
 
-  wss = new WebSocketServer({ server });
+  wss = new WebSocketServer({
+    server,
+    path: "/ws",
+    perMessageDeflate: false,
+  });
+
+  console.log("WebSocket server is set up");
 
   wss.on("connection", (ws: WebSocket) => {
     onlineUsers++;
@@ -63,5 +69,19 @@ export function setupWebSocket(server: Server) {
       console.log("Connection closed. Online users:", onlineUsers);
       broadcastOnlineUsers();
     });
+
+    ws.on("error", (error) => {
+      console.error("WebSocket error:", error);
+    });
+  });
+
+  server.on("upgrade", (request, socket, head) => {
+    if (request.url === "/ws") {
+      wss?.handleUpgrade(request, socket, head, (ws) => {
+        wss?.emit("connection", ws, request);
+      });
+    } else {
+      socket.destroy();
+    }
   });
 }
