@@ -1,7 +1,7 @@
 import { createServer } from 'http';
 import { parse } from 'url';
 import next from 'next';
-import { setupWebSocket } from './app/api/websocket';
+import { setupWebSocket, wss } from './app/api/websocket';
 
 const dev = process.env.NODE_ENV !== 'production';
 const hostname = 'localhost';

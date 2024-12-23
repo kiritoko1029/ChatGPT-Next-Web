@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { Server } from "http";
 
 let onlineUsers = 0;
-let wss: WebSocketServer | null = null;
+export let wss: WebSocketServer | null = null;
 
 function broadcastOnlineUsers() {
   if (!wss) return;
