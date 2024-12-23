@@ -13,12 +13,6 @@ const handle = app.getRequestHandler();
 app.prepare().then(() => {
   const server = createServer(async (req, res) => {
     try {
-      if (req.url === '/ws') {
-        res.writeHead(400);
-        res.end();
-        return;
-      }
-
       const parsedUrl = parse(req.url!, true);
       await handle(req, res, parsedUrl);
     } catch (err) {
@@ -31,6 +25,7 @@ app.prepare().then(() => {
   setupWebSocket(server);
 
   server.listen(port, hostname, () => {
-    console.log(`> Ready on http://${hostname}:${port}`);
+    console.log(`> Server listening at http://${hostname}:${port}`);
+    console.log(`> WebSocket server is ready`);
   });
 }); 

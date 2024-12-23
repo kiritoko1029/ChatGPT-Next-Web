@@ -19,34 +19,17 @@ export function useWebSocket() {
   const setOnlineUsers = useWebSocketStore((state) => state.setOnlineUsers);
 
   const setupWebSocket = useCallback(() => {
-    // 如果已经有连接或正在重连，不要创建新连接
-    if (
-      wsRef.current?.readyState === WebSocket.OPEN ||
-      wsRef.current?.readyState === WebSocket.CONNECTING
-    ) {
-      return;
-    }
-
-    // 清理现有连接
-    if (wsRef.current) {
-      wsRef.current.close();
-      wsRef.current = null;
-    }
-
-    // 清理重连定时器
-    if (reconnectTimeoutRef.current) {
-      clearTimeout(reconnectTimeoutRef.current);
-      reconnectTimeoutRef.current = null;
-    }
-
     try {
       const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-      const ws = new WebSocket(`${protocol}//${window.location.host}/ws`);
+      const host = window.location.host;
+      console.log(`Connecting to WebSocket at ${protocol}//${host}/ws`);
+
+      const ws = new WebSocket(`${protocol}//${host}/ws`);
       wsRef.current = ws;
 
       ws.onopen = () => {
-        console.log("WebSocket connected");
-        reconnectAttemptsRef.current = 0; // 重置重连次数
+        console.log("WebSocket connected successfully");
+        reconnectAttemptsRef.current = 0;
         ws.send(JSON.stringify({ type: "getOnline" }));
       };
 
