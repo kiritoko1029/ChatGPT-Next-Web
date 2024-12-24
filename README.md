@@ -2,9 +2,10 @@
 > 原项目：[ChatGPTNextWeb](https://github.com/ChatGPTNextWeb/ChatGPT-Next-Web)
 ## 新特性
 * 优化了主题配色，与企业版颜色一致。
-* 添加hitokoto一言，点击可刷新。
+* 添加hitokoto一言，点击可刷新,可复制。
 * 可修改标题和标题右侧图标。
 * 添加公告功能，可解析markdown，更新公告需重启docker容器。
+* 添加websocket，需自行启动`websocket-server`，运行命令：`docker run -itd -p 13001:13001 195658/nextweb-ws-server:1.0`可实时显示在线人数。
 * 以上功能通过环境变量即可需改
 ## 环境变量
 ### (可选) `SIDEBAR_TITLE`
