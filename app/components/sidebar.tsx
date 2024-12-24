@@ -338,7 +338,28 @@ const SubTitle = function SubTitle(props: {}) {
     const text = `${hitokoto}${hitokoto_from ? ` —— ${hitokoto_from}` : ""}${
       from_who ? ` ${from_who}` : ""
     }`;
-    await navigator.clipboard.writeText(text);
+
+    try {
+      // 首先尝试使用现代的 Clipboard API
+      await navigator.clipboard.writeText(text);
+    } catch (err) {
+      // 如果 Clipboard API 失败，使用传统的方法
+      const textarea = document.createElement("textarea");
+      textarea.value = text;
+      textarea.style.position = "fixed";
+      textarea.style.opacity = "0";
+      document.body.appendChild(textarea);
+      textarea.select();
+      try {
+        document.execCommand("copy");
+        document.body.removeChild(textarea);
+      } catch (e) {
+        console.error("复制失败:", e);
+        document.body.removeChild(textarea);
+        return;
+      }
+    }
+
     setShowCopied(true);
     setTimeout(() => setShowCopied(false), 1000);
   };
