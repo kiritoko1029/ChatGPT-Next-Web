@@ -6,6 +6,7 @@ services:
     image: yidadaa/chatgpt-next-web
     ports:
       - "3000:3000"
+      - "3001:3001"
     environment:
       - OPENAI_API_KEY=$OPENAI_API_KEY
       - GOOGLE_API_KEY=$GOOGLE_API_KEY
@@ -19,6 +20,7 @@ services:
       - OPENAI_SB=$OPENAI_SB
       - HOSTNAME=0.0.0.0
       - PORT=3000
+      - NEXT_PUBLIC_WS_URL=${NEXT_PUBLIC_WS_URL:-ws://0.0.0.0:3001/ws}
 
   chatgpt-next-web-proxy:
     profiles: [ "proxy" ]
