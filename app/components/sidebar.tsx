@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useMemo, useState, Fragment } from "react";
-import { useWebSocket } from "../hooks/useWebSocket";
+import { useWebSocket } from "../websocket/useWebSocket";
 import styles from "./home.module.scss";
 
 import { IconButton } from "./button";
@@ -383,27 +383,29 @@ const SubTitle = function SubTitle(props: {}) {
 
   return (
     <div className={styles["sidebar-sub-title"]}>
-      <div
-        style={{
-          fontSize: "12px",
-          color: "#888",
-          display: "flex",
-          alignItems: "center",
-          gap: "4px",
-          marginBottom: "4px",
-        }}
-      >
+      {onlineUsers > 0 && (
         <div
           style={{
-            width: "6px",
-            height: "6px",
-            borderRadius: "50%",
-            backgroundColor: onlineUsers > 0 ? "#4CAF50" : "#ccc",
-            marginRight: "2px",
+            fontSize: "12px",
+            color: "#888",
+            display: "flex",
+            alignItems: "center",
+            gap: "4px",
+            marginBottom: "4px",
           }}
-        />
-        {Locale.Hitokoto.OnlineCount(onlineUsers)}
-      </div>
+        >
+          <div
+            style={{
+              width: "6px",
+              height: "6px",
+              borderRadius: "50%",
+              backgroundColor: "#4CAF50",
+              marginRight: "2px",
+            }}
+          />
+          {Locale.Hitokoto.OnlineCount(onlineUsers)}
+        </div>
+      )}
       <HitokotoTooltip
         showCopied={showCopied}
         onRefresh={fetchHitokoto}

@@ -85,6 +85,7 @@ declare global {
       SIDEBAR_TITLE?: string;
       HEADER_LOGO_URL?: string;
       ANNOUNCEMENT_PATH?: string;
+      WS_URL?: string;
     }
   }
 }
@@ -122,6 +123,7 @@ export const getSidebarConfig = () => {
     title: process.env.SIDEBAR_TITLE ?? "Next Web",
     hitokotoUrl: process.env.HITOKOTO_URL ?? "https://v1.hitokoto.cn",
     headerLogoUrl: process.env.HEADER_LOGO_URL ?? "",
+    wsUrl: process.env.WS_URL ?? "",
   };
 };
 export const getServerSideConfig = () => {
@@ -139,7 +141,9 @@ export const getServerSideConfig = () => {
     if (customModels) customModels += ",";
     customModels += DEFAULT_MODELS.filter(
       (m) =>
-        (m.name.startsWith("gpt-4") || m.name.startsWith("chatgpt-4o") || m.name.startsWith("o1")) &&
+        (m.name.startsWith("gpt-4") ||
+          m.name.startsWith("chatgpt-4o") ||
+          m.name.startsWith("o1")) &&
         !m.name.startsWith("gpt-4o-mini"),
     )
       .map((m) => "-" + m.name)

@@ -34,7 +34,6 @@ ENV PROXY_URL=""
 ENV OPENAI_API_KEY=""
 ENV GOOGLE_API_KEY=""
 ENV CODE=""
-
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
@@ -57,7 +56,7 @@ CMD if [ -n "$PROXY_URL" ]; then \
     echo "localnet ::1/128" >> $conf; \
     echo "[ProxyList]" >> $conf; \
     echo "$protocol $host $port" >> $conf; \
-    node proxychains -f $conf node server.js; \
+    proxychains -f $conf node server.js; \
     else \
-    node node server.js; \
+    node server.js; \
     fi
