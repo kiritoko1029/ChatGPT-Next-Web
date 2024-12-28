@@ -258,12 +258,12 @@ OPENAI_API_KEY=<your api key here>
 > ⚠️ 注意：Docker バージョンは最新バージョンより 1～2 日遅れることが多いため、デプロイ後に「更新があります」の通知が出続けることがありますが、正常です。
 
 ```shell
-docker pull yidadaa/chatgpt-next-web
+docker pull dogtititi/chatgpt-next-web-earlybird
 
 docker run -d -p 3000:3000 \
    -e OPENAI_API_KEY=sk-xxxx \
    -e CODE=ページアクセスパスワード \
-   yidadaa/chatgpt-next-web
+   dogtititi/chatgpt-next-web-earlybird
 ```
 
 プロキシを指定することもできます：
@@ -274,7 +274,7 @@ docker run -d -p 3000:3000 \
    -e CODE=ページアクセスパスワード \
    --net=host \
    -e PROXY_URL=http://127.0.0.1:7890 \
-   yidadaa/chatgpt-next-web
+   dogtititi/chatgpt-next-web-earlybird
 ```
 
 ローカルプロキシがアカウントとパスワードを必要とする場合は、以下を使用できます：

@@ -1,9 +1,9 @@
 version: "3.9"
 services:
-  chatgpt-next-web:
+  chatgpt-next-web-earlybird:
     profiles: [ "no-proxy" ]
-    container_name: chatgpt-next-web
-    image: yidadaa/chatgpt-next-web
+    container_name: chatgpt-next-web-earlybird
+    image: dogtititi/chatgpt-next-web-earlybird
     ports:
       - "3000:3000"
       - "3001:3001"
@@ -22,10 +22,10 @@ services:
       - PORT=3000
       - NEXT_PUBLIC_WS_URL=${NEXT_PUBLIC_WS_URL:-ws://0.0.0.0:3001/ws}
 
-  chatgpt-next-web-proxy:
+  chatgpt-next-web-earlybird-proxy:
     profiles: [ "proxy" ]
-    container_name: chatgpt-next-web-proxy
-    image: yidadaa/chatgpt-next-web
+    container_name: chatgpt-next-web-earlybird-proxy
+    image: dogtititi/chatgpt-next-web-earlybird
     ports:
       - "3000:3000"
     environment:

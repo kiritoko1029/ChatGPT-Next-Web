@@ -1,45 +1,70 @@
 @import "./animation.scss";
 @import "./window.scss";
+@import "./themes/coral.scss";
+@import "./themes/mint.scss";
+@import "./themes/purple.scss";
+@import "./themes/ocean.scss";
+
+// 获取环境变量中的主题色，不设置默认值，由 next.config.mjs 传入
+$theme: "" !default;
 
 @mixin light {
   --theme: light;
 
   /* color */
-  --white: #fff;
-  --black: #303030;
-  --gray: #fafafa;
-  --primary: #315ef8;
-  --second: #f3f3f6;
-  --hover-color: #f3f3f3;
-  --bar-color: rgba(0, 0, 0, .1);
+  --white: white;
+  --black: rgb(48, 48, 48);
+  --gray: rgb(250, 250, 250);
+  --bar-color: rgba(0, 0, 0, 0.1);
   --theme-color: var(--gray);
 
   /* shadow */
-  --shadow: 50px 50px 100px 10px rgba(0, 0, 0, .1);
-  --card-shadow: 0px 2px 4px 0px rgba(0, 0, 0, .05);
+  --shadow: 50px 50px 100px 10px rgb(0, 0, 0, 0.1);
+  --card-shadow: 0px 2px 4px 0px rgb(0, 0, 0, 0.05);
 
   /* stroke */
-  --border-in-light: 1px solid #dedede;
-  --sidebar-sub-title: rgba(38, 47, 156, .5);
+  --border-in-light: 1px solid rgba(0, 0, 0, 0.1);
+
+  @if $theme == "coral" {
+    @include coral-light;
+  } @else if $theme == "mint" {
+    @include mint-light;
+  } @else if $theme == "purple" {
+    @include purple-light;
+  } @else if $theme == "ocean" {
+    @include ocean-light;
+  }
 }
 
 @mixin dark {
   --theme: dark;
 
   /* color */
-  --white: #1e1e1e;
-  --black: #bbb;
-  --gray: #151515;
-  --primary: #315ef8;
-  --second: #26262c;
-  --hover-color: #323232;
-  --bar-color: hsla(0, 0%, 100%, .1);
-  --border-in-light: 1px solid hsla(0, 0%, 100%, .192);
-  --sidebar-sub-title: hsla(0, 0%, 100%, .5);
+  --white: rgb(30, 30, 30);
+  --black: rgb(220, 220, 220);
+  --gray: rgb(21, 21, 21);
+  --bar-color: rgba(255, 255, 255, 0.1);
   --theme-color: var(--gray);
+
+  /* shadow */
+  --shadow: 50px 50px 100px 10px rgb(0, 0, 0, 0.1);
+  --card-shadow: 0px 2px 4px 0px rgb(0, 0, 0, 0.05);
+
+  /* stroke */
+  --border-in-light: 1px solid rgba(255, 255, 255, 0.1);
 
   div:not(.no-dark) > svg {
     filter: invert(0.5);
+  }
+
+  @if $theme == "coral" {
+    @include coral-dark;
+  } @else if $theme == "mint" {
+    @include mint-dark;
+  } @else if $theme == "purple" {
+    @include purple-dark;
+  } @else if $theme == "ocean" {
+    @include ocean-dark;
   }
 }
 
@@ -314,7 +339,7 @@ pre {
     display: inline-flex;
     justify-content: center;
     pointer-events: none;
-    button{
+    button {
       pointer-events: auto;
       margin-top: 3em;
       margin-bottom: 4em;
@@ -332,7 +357,11 @@ pre {
     background-image: none;
   }
   .collapsed {
-    background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.06));
+    background-image: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.8),
+      rgba(0, 0, 0, 0.06)
+    );
   }
 }
 

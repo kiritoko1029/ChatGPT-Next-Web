@@ -288,12 +288,12 @@ BASE_URL=https://b.nextweb.fun/api/proxy
 > ⚠️ 注意：docker 版本在大多数时间都会落后最新的版本 1 到 2 天，所以部署后会持续出现“存在更新”的提示，属于正常现象。
 
 ```shell
-docker pull yidadaa/chatgpt-next-web
+docker pull dogtititi/chatgpt-next-web-earlybird
 
 docker run -d -p 3000:3000 \
    -e OPENAI_API_KEY=sk-xxxx \
    -e CODE=页面访问密码 \
-   yidadaa/chatgpt-next-web
+   dogtititi/chatgpt-next-web-earlybird
 ```
 
 你也可以指定 proxy：
@@ -304,7 +304,7 @@ docker run -d -p 3000:3000 \
    -e CODE=页面访问密码 \
    --net=host \
    -e PROXY_URL=http://127.0.0.1:7890 \
-   yidadaa/chatgpt-next-web
+   dogtititi/chatgpt-next-web-earlybird
 ```
 
 如果你的本地代理需要账号密码，可以使用：

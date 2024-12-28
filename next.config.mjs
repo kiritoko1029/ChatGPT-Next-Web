@@ -6,6 +6,9 @@ console.log("[Next] build mode", mode);
 const disableChunk = !!process.env.DISABLE_CHUNK || mode === "export";
 console.log("[Next] build with chunk: ", !disableChunk);
 
+const theme = process.env.THEME_COLOR ?? "coral";
+console.log("[Next] build with theme: ", theme);
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   webpack(config) {
@@ -35,6 +38,9 @@ const nextConfig = {
   },
   experimental: {
     forceSwcTransforms: true,
+  },
+  sassOptions: {
+    additionalData: `$theme: "${theme}";`,
   },
 };
 
@@ -74,8 +80,10 @@ if (mode !== "export") {
       // },
       {
         // https://{resource_name}.openai.azure.com/openai/deployments/{deploy_name}/chat/completions
-        source: "/api/proxy/azure/:resource_name/deployments/:deploy_name/:path*",
-        destination: "https://:resource_name.openai.azure.com/openai/deployments/:deploy_name/:path*",
+        source:
+          "/api/proxy/azure/:resource_name/deployments/:deploy_name/:path*",
+        destination:
+          "https://:resource_name.openai.azure.com/openai/deployments/:deploy_name/:path*",
       },
       {
         source: "/api/proxy/google/:path*",

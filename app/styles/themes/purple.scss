@@ -1,0 +1,14 @@
+/* 深邃紫主题 */
+@mixin purple-light {
+  --primary: rgb(125, 95, 255);
+  --second: rgba(125, 95, 255, 0.1);
+  --hover-color: rgb(247, 245, 255);
+  --bar-color: rgba(125, 95, 255, 0.1);
+}
+
+@mixin purple-dark {
+  --primary: rgb(145, 115, 255);
+  --second: rgba(145, 115, 255, 0.1);
+  --hover-color: rgb(37, 35, 38);
+  --bar-color: rgba(145, 115, 255, 0.1);
+}
