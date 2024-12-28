@@ -1,0 +1,117 @@
+.model-selector {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  .search-container {
+    padding: 10px;
+    background-color: var(--white);
+    position: sticky;
+    top: 0;
+    z-index: 2;
+
+    :global(.ant-input-affix-wrapper) {
+      border-radius: 8px;
+      width: 100%;
+    }
+
+    input {
+      width: 100%;
+      max-width: 100%;
+    }
+  }
+
+  .model-list-container {
+    flex: 1;
+    overflow-y: auto;
+    padding-bottom: 20px;
+
+    &:after {
+      content: "";
+      display: block;
+      height: 20px;
+    }
+  }
+
+  .highlight {
+    background-color: var(--second);
+    padding: 0 2px;
+    border-radius: 2px;
+  }
+
+  .model-group {
+    margin-bottom: 20px;
+
+    &:last-child {
+      margin-bottom: 20px;
+    }
+
+    .group-title {
+      font-size: 14px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      padding: 10px 20px;
+      color: var(--black);
+      position: sticky;
+      top: 0px;
+      z-index: 1;
+      background-color: var(--white);
+      display: flex;
+      align-items: center;
+
+      &::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: rgb(222, 222, 222);
+        margin-left: 10px;
+      }
+    }
+
+    .model-list {
+      .model-item {
+        display: flex;
+        align-items: center;
+        padding: 10px 20px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+        border-radius: 8px;
+        margin: 0 10px;
+
+        &:hover {
+          background-color: var(--hover-color);
+        }
+
+        &-active {
+          border-color: var(--primary);
+          background-color: var(--second);
+        }
+
+        .model-icon {
+          width: 24px;
+          height: 24px;
+          margin-right: 20px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .model-info {
+          flex: 1;
+
+          .model-name {
+            font-size: 14px;
+            color: var(--black);
+          }
+
+          .model-description {
+            font-size: 12px;
+            color: #666;
+            margin-top: 4px;
+          }
+        }
+      }
+    }
+  }
+}

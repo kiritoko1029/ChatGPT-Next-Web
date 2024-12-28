@@ -58,7 +58,6 @@ import {
   Theme,
   useAppConfig,
   DEFAULT_TOPIC,
-  ModelType,
   usePluginStore,
 } from "../store";
 
@@ -73,6 +72,8 @@ import {
   isDalle3,
   showPlugins,
   safeLocalStorage,
+  getModelSizes,
+  supportsCustomSize,
 } from "../utils";
 
 import { uploadImage as uploadImageRemote } from "@/app/utils/chat";
@@ -80,7 +81,7 @@ import { uploadImage as uploadImageRemote } from "@/app/utils/chat";
 import dynamic from "next/dynamic";
 
 import { ChatControllerPool } from "../client/controller";
-import { DalleSize, DalleQuality, DalleStyle } from "../typing";
+import { DalleQuality, DalleStyle, ModelSize } from "../typing";
 import { Prompt, usePromptStore } from "../store/prompt";
 import Locale from "../locales";
 
@@ -121,9 +122,10 @@ import { createTTSPlayer } from "../utils/audio";
 import { MsEdgeTTS, OUTPUT_FORMAT } from "../utils/ms_edge_tts";
 
 import { isEmpty } from "lodash-es";
-import { getModelProvider } from "../utils/model";
 import { RealtimeChat } from "@/app/components/realtime-chat";
 import clsx from "clsx";
+
+import { ModelSelector } from "@/app/components/ui/model-selector";
 
 const localStorage = safeLocalStorage();
 
@@ -520,10 +522,11 @@ export function ChatActions(props: {
   const [showSizeSelector, setShowSizeSelector] = useState(false);
   const [showQualitySelector, setShowQualitySelector] = useState(false);
   const [showStyleSelector, setShowStyleSelector] = useState(false);
-  const dalle3Sizes: DalleSize[] = ["1024x1024", "1792x1024", "1024x1792"];
+  const modelSizes = getModelSizes(currentModel);
   const dalle3Qualitys: DalleQuality[] = ["standard", "hd"];
   const dalle3Styles: DalleStyle[] = ["vivid", "natural"];
-  const currentSize = session.mask.modelConfig?.size ?? "1024x1024";
+  const currentSize =
+    session.mask.modelConfig?.size ?? ("1024x1024" as ModelSize);
   const currentQuality = session.mask.modelConfig?.quality ?? "standard";
   const currentStyle = session.mask.modelConfig?.style ?? "vivid";
 
@@ -638,43 +641,33 @@ export function ChatActions(props: {
           text={currentModelName}
           icon={<RobotIcon />}
         />
+        <ModelSelector
+          visible={showModelSelector}
+          onClose={() => setShowModelSelector(false)}
+          models={models}
+          defaultModel={currentModel}
+          defaultProvider={currentProviderName}
+          onSelection={(model) => {
+            chatStore.updateTargetSession(session, (session) => {
+              session.mask.modelConfig.model = model.name;
+              session.mask.modelConfig.providerName = model?.provider
+                ?.providerName as ServiceProvider;
+              session.mask.syncGlobalConfig = false;
+            });
+            if (model?.provider?.providerName == "ByteDance") {
+              const selectedModel = models.find(
+                (m) =>
+                  m.name == model.name &&
+                  m?.provider?.providerName == model?.provider?.providerName,
+              );
+              showToast(selectedModel?.displayName ?? "");
+            } else {
+              showToast(model.name);
+            }
+          }}
+        />
 
-        {showModelSelector && (
-          <Selector
-            defaultSelectedValue={`${currentModel}@${currentProviderName}`}
-            items={models.map((m) => ({
-              title: `${m.displayName}${
-                m?.provider?.providerName
-                  ? " (" + m?.provider?.providerName + ")"
-                  : ""
-              }`,
-              value: `${m.name}@${m?.provider?.providerName}`,
-            }))}
-            onClose={() => setShowModelSelector(false)}
-            onSelection={(s) => {
-              if (s.length === 0) return;
-              const [model, providerName] = getModelProvider(s[0]);
-              chatStore.updateTargetSession(session, (session) => {
-                session.mask.modelConfig.model = model as ModelType;
-                session.mask.modelConfig.providerName =
-                  providerName as ServiceProvider;
-                session.mask.syncGlobalConfig = false;
-              });
-              if (providerName == "ByteDance") {
-                const selectedModel = models.find(
-                  (m) =>
-                    m.name == model &&
-                    m?.provider?.providerName == providerName,
-                );
-                showToast(selectedModel?.displayName ?? "");
-              } else {
-                showToast(model);
-              }
-            }}
-          />
-        )}
-
-        {isDalle3(currentModel) && (
+        {supportsCustomSize(currentModel) && (
           <ChatAction
             onClick={() => setShowSizeSelector(true)}
             text={currentSize}
@@ -685,7 +678,7 @@ export function ChatActions(props: {
         {showSizeSelector && (
           <Selector
             defaultSelectedValue={currentSize}
-            items={dalle3Sizes.map((m) => ({
+            items={modelSizes.map((m) => ({
               title: m,
               value: m,
             }))}
