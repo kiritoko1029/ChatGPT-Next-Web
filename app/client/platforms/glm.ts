@@ -21,9 +21,10 @@ import {
   SpeechOptions,
 } from "../api";
 import { getClientConfig } from "@/app/config/client";
-import { getMessageTextContent } from "@/app/utils";
+import { getMessageTextContent, isVisionModel } from "@/app/utils";
 import { RequestPayload } from "./openai";
 import { fetch } from "@/app/utils/stream";
+import { preProcessImageContent } from "@/app/utils/chat";
 
 interface BasePayload {
   model: string;
@@ -52,6 +53,32 @@ interface VideoGenerationPayload extends BasePayload {
 }
 
 type ModelType = "chat" | "image" | "video";
+
+interface BasePayload {
+  model: string;
+}
+
+interface ChatPayload extends BasePayload {
+  messages: ChatOptions["messages"];
+  stream?: boolean;
+  temperature?: number;
+  presence_penalty?: number;
+  frequency_penalty?: number;
+  top_p?: number;
+}
+
+interface ImageGenerationPayload extends BasePayload {
+  prompt: string;
+  size?: string;
+  user_id?: string;
+}
+
+interface VideoGenerationPayload extends BasePayload {
+  prompt: string;
+  duration?: number;
+  resolution?: string;
+  user_id?: string;
+}
 
 export class ChatGLMApi implements LLMApi {
   private disableListModels = true;
@@ -154,9 +181,12 @@ export class ChatGLMApi implements LLMApi {
   }
 
   async chat(options: ChatOptions) {
+    const visionModel = isVisionModel(options.config.model);
     const messages: ChatOptions["messages"] = [];
     for (const v of options.messages) {
-      const content = getMessageTextContent(v);
+      const content = visionModel
+        ? await preProcessImageContent(v.content)
+        : getMessageTextContent(v);
       messages.push({ role: v.role, content });
     }
 
@@ -168,7 +198,6 @@ export class ChatGLMApi implements LLMApi {
         providerName: options.config.providerName,
       },
     };
-
     const modelType = this.getModelType(modelConfig.model);
     const requestPayload = this.createPayload(messages, modelConfig, options);
     const path = this.path(this.getModelPath(modelType));

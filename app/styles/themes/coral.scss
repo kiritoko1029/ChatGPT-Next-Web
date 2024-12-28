@@ -1,14 +1,14 @@
 /* 珊瑚橙主题 */
 @mixin coral-light {
   --primary: rgb(255, 127, 80);
-  --second: rgba(255, 127, 80, 0.1);
+  --second: rgb(253, 246, 243);
   --hover-color: rgb(255, 248, 245);
   --bar-color: rgba(255, 127, 80, 0.1);
 }
 
 @mixin coral-dark {
   --primary: rgb(255, 147, 100);
-  --second: rgba(255, 147, 100, 0.1);
+  --second: rgb(46, 42, 41);
   --hover-color: rgb(38, 35, 34);
   --bar-color: rgba(255, 147, 100, 0.1);
 }

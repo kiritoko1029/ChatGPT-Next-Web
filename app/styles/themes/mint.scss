@@ -1,14 +1,14 @@
 /* 薄荷绿主题 */
 @mixin mint-light {
   --primary: rgb(22, 177, 155);
-  --second: rgba(22, 177, 155, 0.1);
+  --second: rgb(242, 249, 247);
   --hover-color: rgb(245, 250, 248);
   --bar-color: rgba(22, 177, 155, 0.1);
 }
 
 @mixin mint-dark {
   --primary: rgb(42, 197, 175);
-  --second: rgba(42, 197, 175, 0.1);
+  --second: rgb(41, 46, 45);
   --hover-color: rgb(36, 38, 37);
   --bar-color: rgba(42, 197, 175, 0.1);
 }
