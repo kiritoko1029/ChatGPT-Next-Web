@@ -13,6 +13,7 @@ import {
   MOONSHOT_BASE_URL,
   STABILITY_BASE_URL,
   IFLYTEK_BASE_URL,
+  DEEPSEEK_BASE_URL,
   XAI_BASE_URL,
   CHATGLM_BASE_URL,
 } from "../constant";
@@ -69,6 +70,8 @@ const DEFAULT_MOONSHOT_URL = isApp ? MOONSHOT_BASE_URL : ApiPath.Moonshot;
 const DEFAULT_STABILITY_URL = isApp ? STABILITY_BASE_URL : ApiPath.Stability;
 
 const DEFAULT_IFLYTEK_URL = isApp ? IFLYTEK_BASE_URL : ApiPath.Iflytek;
+
+const DEFAULT_DEEPSEEK_URL = isApp ? DEEPSEEK_BASE_URL : ApiPath.DeepSeek;
 
 const DEFAULT_XAI_URL = isApp ? XAI_BASE_URL : ApiPath.XAI;
 
@@ -130,6 +133,10 @@ const DEFAULT_ACCESS_STATE = {
   iflytekUrl: DEFAULT_IFLYTEK_URL,
   iflytekApiKey: "",
   iflytekApiSecret: "",
+
+  // deepseek
+  deepseekUrl: DEFAULT_DEEPSEEK_URL,
+  deepseekApiKey: "",
 
   // xai
   xaiUrl: DEFAULT_XAI_URL,
@@ -208,6 +215,9 @@ export const useAccessStore = createPersistStore(
     isValidIflytek() {
       return ensure(get(), ["iflytekApiKey"]);
     },
+    isValidDeepSeek() {
+      return ensure(get(), ["deepseekApiKey"]);
+    },
 
     isValidXAI() {
       return ensure(get(), ["xaiApiKey"]);
@@ -232,6 +242,7 @@ export const useAccessStore = createPersistStore(
         this.isValidTencent() ||
         this.isValidMoonshot() ||
         this.isValidIflytek() ||
+        this.isValidDeepSeek() ||
         this.isValidXAI() ||
         this.isValidChatGLM() ||
         !this.enabledAccessControl() ||
