@@ -13,6 +13,7 @@ import {
   MOONSHOT_BASE_URL,
   STABILITY_BASE_URL,
   IFLYTEK_BASE_URL,
+  DEEPSEEK_BASE_URL,
   XAI_BASE_URL,
   CHATGLM_BASE_URL,
 } from "../constant";
@@ -22,29 +23,6 @@ import { createPersistStore } from "../utils/store";
 import { ensure } from "../utils/clone";
 import { DEFAULT_CONFIG } from "./config";
 import { getModelProvider } from "../utils/model";
-
-export interface AccessControlStore {
-  accessCode: string;
-  token: string;
-  needCode: boolean;
-  hideUserApiKey: boolean;
-  openaiUrl: string;
-  hitokotoUrl: string;
-  title: string;
-  headerLogoUrl: string;
-  onlineUsers: number;
-
-  updateToken: (token: string) => void;
-  updateCode: (code: string) => void;
-  updateOpenAiUrl: (url: string) => void;
-  updateHitokotoUrl: (url: string) => void;
-  updateTitle: (title: string) => void;
-  updateHeaderLogoUrl: (url: string) => void;
-  updateOnlineUsers: (count: number) => void;
-  enabledAccessControl: () => boolean;
-  isAuthorized: () => boolean;
-  fetch: () => void;
-}
 
 let fetchState = 0; // 0 not fetch, 1 fetching, 2 done
 
@@ -69,6 +47,8 @@ const DEFAULT_MOONSHOT_URL = isApp ? MOONSHOT_BASE_URL : ApiPath.Moonshot;
 const DEFAULT_STABILITY_URL = isApp ? STABILITY_BASE_URL : ApiPath.Stability;
 
 const DEFAULT_IFLYTEK_URL = isApp ? IFLYTEK_BASE_URL : ApiPath.Iflytek;
+
+const DEFAULT_DEEPSEEK_URL = isApp ? DEEPSEEK_BASE_URL : ApiPath.DeepSeek;
 
 const DEFAULT_XAI_URL = isApp ? XAI_BASE_URL : ApiPath.XAI;
 
@@ -131,6 +111,10 @@ const DEFAULT_ACCESS_STATE = {
   iflytekApiKey: "",
   iflytekApiSecret: "",
 
+  // deepseek
+  deepseekUrl: DEFAULT_DEEPSEEK_URL,
+  deepseekApiKey: "",
+
   // xai
   xaiUrl: DEFAULT_XAI_URL,
   xaiApiKey: "",
@@ -150,6 +134,8 @@ const DEFAULT_ACCESS_STATE = {
   title: "",
   hitokotoUrl: "",
   headerLogoUrl: "",
+  visionModels: "",
+
   // tts config
   edgeTTSVoiceName: "zh-CN-YunxiNeural",
 };
@@ -163,7 +149,10 @@ export const useAccessStore = createPersistStore(
 
       return get().needCode;
     },
-
+    getVisionModels() {
+      this.fetch();
+      return get().visionModels;
+    },
     edgeVoiceName() {
       this.fetch();
 
@@ -208,6 +197,9 @@ export const useAccessStore = createPersistStore(
     isValidIflytek() {
       return ensure(get(), ["iflytekApiKey"]);
     },
+    isValidDeepSeek() {
+      return ensure(get(), ["deepseekApiKey"]);
+    },
 
     isValidXAI() {
       return ensure(get(), ["xaiApiKey"]);
@@ -232,6 +224,7 @@ export const useAccessStore = createPersistStore(
         this.isValidTencent() ||
         this.isValidMoonshot() ||
         this.isValidIflytek() ||
+        this.isValidDeepSeek() ||
         this.isValidXAI() ||
         this.isValidChatGLM() ||
         !this.enabledAccessControl() ||

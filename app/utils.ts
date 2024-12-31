@@ -6,7 +6,7 @@ import { ServiceProvider } from "./constant";
 // import { fetch as tauriFetch, ResponseType } from "@tauri-apps/api/http";
 import { fetch as tauriStreamFetch } from "./utils/stream";
 import { VISION_MODEL_REGEXES, EXCLUDE_VISION_MODEL_REGEXES } from "./constant";
-import { getClientConfig } from "./config/client";
+import { useAccessStore } from "./store";
 import { ModelSize } from "./typing";
 
 export function trimTopic(topic: string) {
@@ -255,10 +255,8 @@ export function getMessageImages(message: RequestMessage): string[] {
 }
 
 export function isVisionModel(model: string) {
-  const clientConfig = getClientConfig();
-  const envVisionModels = clientConfig?.visionModels
-    ?.split(",")
-    .map((m) => m.trim());
+  const visionModels = useAccessStore.getState().visionModels;
+  const envVisionModels = visionModels?.split(",").map((m) => m.trim());
   if (envVisionModels?.includes(model)) {
     return true;
   }
