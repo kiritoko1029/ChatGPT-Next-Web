@@ -24,29 +24,6 @@ import { ensure } from "../utils/clone";
 import { DEFAULT_CONFIG } from "./config";
 import { getModelProvider } from "../utils/model";
 
-export interface AccessControlStore {
-  accessCode: string;
-  token: string;
-  needCode: boolean;
-  hideUserApiKey: boolean;
-  openaiUrl: string;
-  hitokotoUrl: string;
-  title: string;
-  headerLogoUrl: string;
-  onlineUsers: number;
-
-  updateToken: (token: string) => void;
-  updateCode: (code: string) => void;
-  updateOpenAiUrl: (url: string) => void;
-  updateHitokotoUrl: (url: string) => void;
-  updateTitle: (title: string) => void;
-  updateHeaderLogoUrl: (url: string) => void;
-  updateOnlineUsers: (count: number) => void;
-  enabledAccessControl: () => boolean;
-  isAuthorized: () => boolean;
-  fetch: () => void;
-}
-
 let fetchState = 0; // 0 not fetch, 1 fetching, 2 done
 
 const isApp = getClientConfig()?.buildMode === "export";
@@ -157,6 +134,8 @@ const DEFAULT_ACCESS_STATE = {
   title: "",
   hitokotoUrl: "",
   headerLogoUrl: "",
+  visionModels: "",
+
   // tts config
   edgeTTSVoiceName: "zh-CN-YunxiNeural",
 };
@@ -170,7 +149,10 @@ export const useAccessStore = createPersistStore(
 
       return get().needCode;
     },
-
+    getVisionModels() {
+      this.fetch();
+      return get().visionModels;
+    },
     edgeVoiceName() {
       this.fetch();
 
