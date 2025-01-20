@@ -7,8 +7,6 @@ import type { Metadata, Viewport } from "next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { getServerSideConfig, getSidebarConfig } from "./config/server";
 import { GoogleTagManager, GoogleAnalytics } from "@next/third-parties/google";
-import { AntdRegistry } from "@ant-design/nextjs-registry";
-const serverConfig = getServerSideConfig();
 
 export const metadata: Metadata = {
   title: "NextChat",
@@ -34,6 +32,8 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const serverConfig = getServerSideConfig();
+
   const { headerLogoUrl } = getSidebarConfig();
   let favicon;
   if (headerLogoUrl !== "") favicon = <link rel="icon" href={headerLogoUrl} />;
@@ -55,7 +55,7 @@ export default function RootLayout({
         <script src="/serviceWorkerRegister.js" defer></script>
       </head>
       <body>
-        <AntdRegistry>{children}</AntdRegistry>
+        {children}
         {serverConfig?.isVercel && (
           <>
             <SpeedInsights />

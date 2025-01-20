@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useMemo, useState, Fragment } from "react";
-import { useWebSocket } from "../websocket/useWebSocket";
+
 import styles from "./home.module.scss";
 
 import { IconButton } from "./button";
@@ -9,6 +9,7 @@ import ChatGptIcon from "../icons/chatgpt.svg";
 import AddIcon from "../icons/add.svg";
 import DeleteIcon from "../icons/delete.svg";
 import MaskIcon from "../icons/mask.svg";
+import McpIcon from "../icons/mcp.svg";
 import DragIcon from "../icons/drag.svg";
 import DiscoveryIcon from "../icons/discovery.svg";
 import CopyIcon2 from "../icons/copy2.svg";
@@ -29,8 +30,10 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import { isIOS, useMobileScreen } from "../utils";
 import dynamic from "next/dynamic";
-import { showConfirm, Selector } from "./ui-lib";
+import { Selector, showConfirm } from "./ui-lib";
 import clsx from "clsx";
+import { isMcpEnabled } from "../mcp/actions";
+import { useWebSocket } from "@/app/websocket/useWebSocket";
 
 const DISCOVERY = [
   { name: Locale.Plugin.Name, path: Path.Plugins },
@@ -41,6 +44,7 @@ const DISCOVERY = [
 const ChatList = dynamic(async () => (await import("./chat-list")).ChatList, {
   loading: () => null,
 });
+
 export function useHotKey() {
   const chatStore = useChatStore();
 
@@ -133,6 +137,7 @@ export function useDragSideBar() {
     shouldNarrow,
   };
 }
+
 export function SideBarContainer(props: {
   children: React.ReactNode;
   onDragStart: (e: MouseEvent) => void;
@@ -459,6 +464,18 @@ export function SideBar(props: { className?: string }) {
   const config = useAppConfig();
   const chatStore = useChatStore();
   const { title, headerLogoUrl } = useAccessStore();
+  const [mcpEnabled, setMcpEnabled] = useState(false);
+
+  useEffect(() => {
+    // 检查 MCP 是否启用
+    const checkMcpStatus = async () => {
+      const enabled = await isMcpEnabled();
+      setMcpEnabled(enabled);
+      console.log("[SideBar] MCP enabled:", enabled);
+    };
+    checkMcpStatus();
+  }, []);
+
   return (
     <SideBarContainer
       onDragStart={onDragStart}
@@ -485,6 +502,17 @@ export function SideBar(props: { className?: string }) {
             }}
             shadow
           />
+          {mcpEnabled && (
+            <IconButton
+              icon={<McpIcon />}
+              text={shouldNarrow ? undefined : Locale.Mcp.Name}
+              className={styles["sidebar-bar-button"]}
+              onClick={() => {
+                navigate(Path.McpMarket, { state: { fromHome: true } });
+              }}
+              shadow
+            />
+          )}
           <IconButton
             icon={<DiscoveryIcon />}
             text={shouldNarrow ? undefined : Locale.Discovery.Name}
