@@ -267,56 +267,55 @@ function tryWrapHtmlCode(text: string) {
     );
 }
 
-function _MarkDownContent(props: { content: string }) {
-  const escapedContent = useMemo(() => {
-    return tryWrapHtmlCode(escapeBrackets(props.content));
+function MarkdownContent(props: { content: string }) {
+  const renderedContent = useMemo(() => {
+    const escapedContent = tryWrapHtmlCode(escapeBrackets(props.content));
+    return (
+      <ReactMarkdown
+        remarkPlugins={[RemarkMath, RemarkGfm, RemarkBreaks]}
+        rehypePlugins={[
+          RehypeKatex,
+          [
+            RehypeHighlight,
+            {
+              detect: false,
+              ignoreMissing: true,
+            },
+          ],
+        ]}
+        components={{
+          pre: PreCode,
+          code: CustomCode,
+          p: (pProps) => <p {...pProps} dir="auto" />,
+          a: (aProps) => {
+            const href = aProps.href || "";
+            if (/\.(aac|mp3|opus|wav)$/.test(href)) {
+              return (
+                <figure>
+                  <audio controls src={href}></audio>
+                </figure>
+              );
+            }
+            if (/\.(3gp|3g2|webm|ogv|mpeg|mp4|avi)$/.test(href)) {
+              return (
+                <video controls width="99.9%">
+                  <source src={href} />
+                </video>
+              );
+            }
+            const isInternal = /^\/#/i.test(href);
+            const target = isInternal ? "_self" : (aProps.target ?? "_blank");
+            return <a {...aProps} target={target} />;
+          },
+        }}
+      >
+        {escapedContent}
+      </ReactMarkdown>
+    );
   }, [props.content]);
 
-  return (
-    <ReactMarkdown
-      remarkPlugins={[RemarkMath, RemarkGfm, RemarkBreaks]}
-      rehypePlugins={[
-        RehypeKatex,
-        [
-          RehypeHighlight,
-          {
-            detect: false,
-            ignoreMissing: true,
-          },
-        ],
-      ]}
-      components={{
-        pre: PreCode,
-        code: CustomCode,
-        p: (pProps) => <p {...pProps} dir="auto" />,
-        a: (aProps) => {
-          const href = aProps.href || "";
-          if (/\.(aac|mp3|opus|wav)$/.test(href)) {
-            return (
-              <figure>
-                <audio controls src={href}></audio>
-              </figure>
-            );
-          }
-          if (/\.(3gp|3g2|webm|ogv|mpeg|mp4|avi)$/.test(href)) {
-            return (
-              <video controls width="99.9%">
-                <source src={href} />
-              </video>
-            );
-          }
-          const isInternal = /^\/#/i.test(href);
-          const target = isInternal ? "_self" : aProps.target ?? "_blank";
-          return <a {...aProps} target={target} />;
-        },
-      }}
-    >
-      {escapedContent}
-    </ReactMarkdown>
-  );
+  return <>{renderedContent}</>;
 }
-
-export const MarkdownContent = React.memo(_MarkDownContent);
 
 export function Markdown(
   props: {
