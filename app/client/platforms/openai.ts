@@ -60,10 +60,10 @@ export interface RequestPayload {
   }[];
   stream?: boolean;
   model: string;
-  temperature?: number;
-  presence_penalty?: number;
-  frequency_penalty?: number;
-  top_p?: number;
+  temperature: number;
+  presence_penalty: number;
+  frequency_penalty: number;
+  top_p: number;
   max_tokens?: number;
   max_completion_tokens?: number;
 }
@@ -196,8 +196,6 @@ export class ChatGPTApi implements LLMApi {
 
     const isDalle3 = _isDalle3(options.config.model);
     const isO1 = options.config.model.startsWith("o1");
-    const isDeepseekReasoner =
-      options.config.model.startsWith("deepseek-reasoner");
     if (isDalle3) {
       const prompt = getMessageTextContent(
         options.messages.slice(-1)?.pop() as any,
@@ -228,25 +226,16 @@ export class ChatGPTApi implements LLMApi {
         messages,
         stream: options.config.stream,
         model: modelConfig.model,
-        temperature:
-          !isO1 && !isDeepseekReasoner ? modelConfig.temperature : undefined,
-        presence_penalty: !isDeepseekReasoner
-          ? isO1
-            ? 0
-            : modelConfig.presence_penalty
-          : undefined,
-        frequency_penalty: !isDeepseekReasoner
-          ? isO1
-            ? 0
-            : modelConfig.frequency_penalty
-          : undefined,
-        top_p: !isDeepseekReasoner ? (isO1 ? 1 : modelConfig.top_p) : undefined,
+        temperature: !isO1 ? modelConfig.temperature : 1,
+        presence_penalty: !isO1 ? modelConfig.presence_penalty : 0,
+        frequency_penalty: !isO1 ? modelConfig.frequency_penalty : 0,
+        top_p: !isO1 ? modelConfig.top_p : 1,
         // max_tokens: Math.max(modelConfig.max_tokens, 1024),
         // Please do not ask me why not send max_tokens, no reason, this param is just shit, I dont want to explain anymore.
       };
 
       // O1 使用 max_completion_tokens 控制token数
-      if (isO1 || isDeepseekReasoner) {
+      if (isO1) {
         requestPayload["max_completion_tokens"] = modelConfig.max_tokens;
       }
 
