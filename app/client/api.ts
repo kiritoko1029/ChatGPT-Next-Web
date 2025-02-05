@@ -23,6 +23,7 @@ import { SparkApi } from "./platforms/iflytek";
 import { DeepSeekApi } from "./platforms/deepseek";
 import { XAIApi } from "./platforms/xai";
 import { ChatGLMApi } from "./platforms/glm";
+import { SiliconflowApi } from "./platforms/siliconflow";
 
 export const ROLES = ["system", "user", "assistant"] as const;
 export type MessageRole = (typeof ROLES)[number];
@@ -164,6 +165,9 @@ export class ClientApi {
       case ModelProvider.ChatGLM:
         this.llm = new ChatGLMApi();
         break;
+      case ModelProvider.SiliconFlow:
+        this.llm = new SiliconflowApi();
+        break;
       default:
         this.llm = new ChatGPTApi();
     }
@@ -254,30 +258,37 @@ export function getHeaders(ignoreHeaders: boolean = false) {
     const isDeepSeek = modelConfig.providerName === ServiceProvider.DeepSeek;
     const isXAI = modelConfig.providerName === ServiceProvider.XAI;
     const isChatGLM = modelConfig.providerName === ServiceProvider.ChatGLM;
+    const isSiliconFlow =
+      modelConfig.providerName === ServiceProvider.SiliconFlow;
     const isEnabledAccessControl = accessStore.enabledAccessControl();
     const apiKey = isGoogle
       ? accessStore.googleApiKey
       : isAzure
-      ? accessStore.azureApiKey
-      : isAnthropic
-      ? accessStore.anthropicApiKey
-      : isByteDance
-      ? accessStore.bytedanceApiKey
-      : isAlibaba
-      ? accessStore.alibabaApiKey
-      : isMoonshot
-      ? accessStore.moonshotApiKey
-      : isXAI
-      ? accessStore.xaiApiKey
-      : isDeepSeek
-      ? accessStore.deepseekApiKey
-      : isChatGLM
-      ? accessStore.chatglmApiKey
-      : isIflytek
-      ? accessStore.iflytekApiKey && accessStore.iflytekApiSecret
-        ? accessStore.iflytekApiKey + ":" + accessStore.iflytekApiSecret
-        : ""
-      : accessStore.openaiApiKey;
+        ? accessStore.azureApiKey
+        : isAnthropic
+          ? accessStore.anthropicApiKey
+          : isByteDance
+            ? accessStore.bytedanceApiKey
+            : isAlibaba
+              ? accessStore.alibabaApiKey
+              : isMoonshot
+                ? accessStore.moonshotApiKey
+                : isXAI
+                  ? accessStore.xaiApiKey
+                  : isDeepSeek
+                    ? accessStore.deepseekApiKey
+                    : isChatGLM
+                      ? accessStore.chatglmApiKey
+                      : isSiliconFlow
+                        ? accessStore.siliconflowApiKey
+                        : isIflytek
+                          ? accessStore.iflytekApiKey &&
+                            accessStore.iflytekApiSecret
+                            ? accessStore.iflytekApiKey +
+                              ":" +
+                              accessStore.iflytekApiSecret
+                            : ""
+                          : accessStore.openaiApiKey;
     return {
       isGoogle,
       isAzure,
@@ -290,6 +301,7 @@ export function getHeaders(ignoreHeaders: boolean = false) {
       isDeepSeek,
       isXAI,
       isChatGLM,
+      isSiliconFlow,
       apiKey,
       isEnabledAccessControl,
     };
@@ -299,10 +311,10 @@ export function getHeaders(ignoreHeaders: boolean = false) {
     return isAzure
       ? "api-key"
       : isAnthropic
-      ? "x-api-key"
-      : isGoogle
-      ? "x-goog-api-key"
-      : "Authorization";
+        ? "x-api-key"
+        : isGoogle
+          ? "x-goog-api-key"
+          : "Authorization";
   }
 
   const {
@@ -317,6 +329,7 @@ export function getHeaders(ignoreHeaders: boolean = false) {
     isDeepSeek,
     isXAI,
     isChatGLM,
+    isSiliconFlow,
     apiKey,
     isEnabledAccessControl,
   } = getConfig();
@@ -365,6 +378,8 @@ export function getClientApi(provider: ServiceProvider): ClientApi {
       return new ClientApi(ModelProvider.XAI);
     case ServiceProvider.ChatGLM:
       return new ClientApi(ModelProvider.ChatGLM);
+    case ServiceProvider.SiliconFlow:
+      return new ClientApi(ModelProvider.SiliconFlow);
     default:
       return new ClientApi(ModelProvider.GPT);
   }
