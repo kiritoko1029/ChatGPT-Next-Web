@@ -17,9 +17,8 @@
     "prompts": "node ./scripts/fetch-prompts.mjs",
     "prepare": "husky install",
     "proxy-dev": "sh ./scripts/init-proxy.sh && proxychains -f ./scripts/proxychains.conf yarn dev",
-    "test": "jest --watch",
-    "test:ci": "jest --ci",
-    "ws-dev": "node websocket-server/server.js"
+    "test": "node --no-warnings --experimental-vm-modules $(yarn bin jest) --watch",
+    "test:ci": "node --no-warnings --experimental-vm-modules $(yarn bin jest) --ci"
   },
   "dependencies": {
     "@fortaine/fetch-event-source": "^3.0.6",
@@ -54,7 +53,6 @@
     "remark-math": "^5.1.1",
     "rt-client": "https://github.com/Azure-Samples/aoai-realtime-audio-sdk/releases/download/js/v0.5.0/rt-client-0.5.0.tgz",
     "sass": "^1.59.2",
-    "sharp": "^0.33.5",
     "spark-md5": "^3.0.2",
     "use-debounce": "^9.0.4",
     "zod": "^3.24.1",
@@ -74,7 +72,6 @@
     "@types/react-dom": "^18.2.7",
     "@types/react-katex": "^3.0.0",
     "@types/spark-md5": "^3.0.4",
-    "@types/ws": "^8.5.13",
     "concurrently": "^8.2.2",
     "cross-env": "^7.0.3",
     "eslint": "^8.49.0",
